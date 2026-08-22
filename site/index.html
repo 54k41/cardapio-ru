@@ -19,7 +19,16 @@
         <span class="brand-icon">🍽️</span>
         <div>
           <h1>Cardápio RU</h1>
-          <p class="subtitle">Campus Darcy Ribeiro · UnB</p>
+          <label class="campus-wrap">
+            <select id="campus-select" aria-label="Selecionar campus">
+              <option value="darcy">Darcy Ribeiro · UnB</option>
+              <option value="executivo">Executivo</option>
+              <option value="fcts">Ceilândia · FCTS</option>
+              <option value="fcte">Gama · FCTE</option>
+              <option value="fup">Planaltina · FUP</option>
+              <option value="fal">FAL</option>
+            </select>
+          </label>
         </div>
       </div>
       <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener" hidden>
@@ -33,9 +42,10 @@
 
   <main class="container">
     <section class="meal-switch" role="tablist" aria-label="Refeições">
-      <button role="tab" data-meal="cafe"><span class="meal-ico">☕</span>Café da manhã</button>
-      <button role="tab" data-meal="almoco" class="active"><span class="meal-ico">🍛</span>Almoço</button>
-      <button role="tab" data-meal="jantar"><span class="meal-ico">🌙</span>Jantar</button>
+      <button role="tab" data-meal="principal" hidden><span class="meal-ico">🍽️</span><span class="long">Cardápio</span><span class="short">Cardápio</span></button>
+      <button role="tab" data-meal="cafe"><span class="meal-ico">☕</span><span class="long">Café da manhã</span><span class="short">Café</span></button>
+      <button role="tab" data-meal="almoco" class="active"><span class="meal-ico">🍛</span><span class="long">Almoço</span><span class="short">Almoço</span></button>
+      <button role="tab" data-meal="jantar"><span class="meal-ico">🌙</span><span class="long">Jantar</span><span class="short">Jantar</span></button>
     </section>
 
     <section id="menu-card" class="menu-card" aria-live="polite"></section>

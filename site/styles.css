@@ -53,7 +53,29 @@ body {
   backdrop-filter: blur(4px);
 }
 .brand h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
-.subtitle { font-size: 13px; opacity: .85; font-weight: 400; }
+
+/* seletor de campus (no lugar do subtítulo) */
+.campus-wrap { display: block; margin-top: 3px; }
+#campus-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 11px center,
+    rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  padding: 5px 30px 5px 13px;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+#campus-select:hover { background-color: rgba(255,255,255,.24); }
+#campus-select option { color: var(--text); background: var(--card); }
+#campus-select:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
 
 .source-link {
   color: #fff;
@@ -159,6 +181,7 @@ body {
   font-weight: 600;
 }
 .meal-switch .meal-ico { font-size: 17px; }
+.meal-switch .short { display: none; }
 
 /* ---------- Cardápio ---------- */
 .menu-card {
@@ -226,5 +249,9 @@ body {
   .menu-item { grid-template-columns: 1fr; gap: 2px; padding: 13px 18px; }
   .menu-item dt { margin-top: 10px; }
   .topbar { padding-bottom: 40px; }
-  .meal-switch button { font-size: 13px; min-width: 96px; }
+  /* abas de refeição: nomes curtos, sem corte em telas estreitas */
+  .meal-switch { gap: 0; }
+  .meal-switch button { min-width: 0; flex: 1 1 0; padding: 12px 4px; font-size: 13.5px; }
+  .meal-switch .long { display: none; }
+  .meal-switch .short { display: inline; }
 }

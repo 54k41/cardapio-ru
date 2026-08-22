@@ -4,3 +4,4 @@
 # PDFs baixados (o script baixa de novo a cada execução)
 data/*.pdf
 __pycache__/
+data/samples/

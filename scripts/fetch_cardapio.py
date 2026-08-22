@@ -1,17 +1,24 @@
 """
-Baixa o cardápio semanal do RU Darcy Ribeiro (ru.unb.br), extrai as tabelas
-do PDF por geometria (posições das palavras) e gera um JSON para o site.
+Baixa o cardápio semanal do RU da UnB (ru.unb.br), extrai as tabelas
+dos PDFs e gera um JSON por campus para o site.
+
+Suporta dois formatos:
+  - Tabelado (Darcy, Ceilândia, Gama, Planaltina, FAL): grade vetorial,
+    cabeçalho com datas, rótulos em coluna própria.
+  - Executivo: páginas por categoria ("Saladas", "Pratos principais", ...),
+    sem grade; datas no topo e itens agrupados por coluna de data.
 
 Uso:
-    python scripts/fetch_cardapio.py                 # busca na página oficial
-    python scripts/fetch_cardapio.py arquivo.pdf ... # converte PDFs locais
+    python scripts/fetch_cardapio.py                    # todos os campi
+    python scripts/fetch_cardapio.py darcy executivo    # campi específicos
+    python scripts/fetch_cardapio.py --pdf darcy arq.pdf  # PDF local
 """
 
 import json
 import re
 import sys
 import unicodedata
-from datetime import date, datetime
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -19,16 +26,61 @@ import pdfplumber
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
-OUT_JSON = DATA_DIR / "cardapio.json"
-LISTING_URL = "https://ru.unb.br/cardapio/"
+SITE_DATA = ROOT / "site" / "data"
+LISTING_BASE = "https://ru.unb.br"
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
 
-DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
-FOOTER_RE = re.compile(r"Mesa de apoio|sujeito a altera", re.I)
+# Fuso de Brasília (UTC-3, sem horário de verão desde 2019)
+TZ_BSB = timezone(timedelta(hours=-3))
 
-# Rótulos normalizados (sem acento, maiúsculas)
+DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
+
+# ---------------------------------------------------------------------------
+# Campi suportados
+# ---------------------------------------------------------------------------
+CAMPUS = {
+    "darcy": {
+        "name": "Darcy Ribeiro",
+        "listing": f"{LISTING_BASE}/cardapio/",
+        "pattern": r"Darcy-Ribeiro",
+    },
+    "executivo": {
+        "name": "Restaurante Executivo",
+        "listing": f"{LISTING_BASE}/restaurante-executivo/",
+        "pattern": r"(?<![^/])SEMANA-",  # PDFs do executivo: SEMANA-04-17-08...
+    },
+    "fcts": {
+        "name": "Ceilândia (FCTS)",
+        "listing": f"{LISTING_BASE}/cardapio-ceilandia/",
+        "pattern": r"Ceilandia",
+    },
+    "fcte": {
+        "name": "Gama (FCTE)",
+        "listing": f"{LISTING_BASE}/cardapio-gama/",
+        "pattern": r"Gama",
+    },
+    "fup": {
+        "name": "Planaltina (FUP)",
+        "listing": f"{LISTING_BASE}/cardapio-planaltina/",
+        "pattern": r"Planaltina",
+    },
+    "fal": {
+        "name": "Fazenda Água Limpa (FAL)",
+        "listing": f"{LISTING_BASE}/cardapio-fazenda-agua-limpa/",
+        "pattern": r"Fazenda",
+    },
+}
+DEFAULT_CAMPUS = "darcy"
+
+MEAL_KEYS = {"cafe": "cafe da manha", "almoco": "almoco", "jantar": "jantar"}
+MEAL_PRETTY = {"cafe": "Café da manhã", "almoco": "Almoço", "jantar": "Jantar"}
+MEAL_ORDER = ["cafe", "almoco", "jantar"]
+
+# ---------------------------------------------------------------------------
+# Parser de PDFs tabelados (Darcy, FCTS, FCTE, FUP, FAL)
+# ---------------------------------------------------------------------------
 LABELS = [
     "BEBIDAS", "PANIFICACAO", "OPCAO EXTRA", "GORDURA",
     "COMPLEMENTO PADRAO", "COMPLEMENTO OVOLACTOVEGETARIANO",
@@ -39,7 +91,6 @@ LABELS = [
     "GUARNICAO", "ACOMPANHAMENTOS", "SOBREMESA",
     "BEBIDA (REFRESCO DE)", "SOPA", "TORRADA",
 ]
-MEAL_KEYS = {"cafe": "cafe da manha", "almoco": "almoco", "jantar": "jantar"}
 
 LABEL_PRETTY = {
     "BEBIDAS": "Bebidas", "PANIFICACAO": "Panificação", "OPCAO EXTRA": "Opção Extra",
@@ -55,8 +106,6 @@ LABEL_PRETTY = {
     "SOBREMESA": "Sobremesa", "BEBIDA (REFRESCO DE)": "Bebida (Refresco de)",
     "SOPA": "Sopa", "TORRADA": "Torrada",
 }
-MEAL_PRETTY = {"cafe": "Café da manhã", "almoco": "Almoço", "jantar": "Jantar"}
-MEAL_ORDER = ["cafe", "almoco", "jantar"]
 
 
 def strip_accents(s):
@@ -87,46 +136,61 @@ def match_meal(text):
     return None
 
 
-def parse_pdf(path):
-    """Retorna {data_iso: {meal: [{'label','value'}, ...]}}.
+TABLE_CFG = {"vertical_strategy": "lines", "horizontal_strategy": "lines",
+             "snap_tolerance": 3, "join_tolerance": 3}
 
-    Usa a grade vetorial da tabela (extract_table com strategy='lines'),
-    que preserva células multilinha sem vazamento entre linhas/colunas.
+
+def parse_table_pdf(path):
+    """Parser para PDFs com grade: retorna {data_iso: {meal: [{'label','value'}]}}.
+
+    Detecta automaticamente a linha de cabeçalho (datas), a coluna de rótulos
+    e a refeição da página (texto vertical), tolerando variações de layout
+    entre campi.
     """
     days = {}
-    table_cfg = {"vertical_strategy": "lines", "horizontal_strategy": "lines",
-                 "snap_tolerance": 3, "join_tolerance": 3}
-
     with pdfplumber.open(path) as pdf:
         for page in pdf.pages:
-            table = page.extract_table(table_cfg)
+            table = page.extract_table(TABLE_CFG)
             if not table:
                 continue
 
-            # --- cabeçalho: linha com 'COMPOSIÇÃO' e >= 5 datas
+            # --- cabeçalho: linha com >= 4 datas
             header_idx, col_date = None, {}
             for i, row in enumerate(table):
-                cells = [c or "" for c in row]
-                if not any("composi" in norm(c) or "COMPOSIÇÃO" in (c or "").upper() for c in cells):
-                    continue
                 mapping = {}
-                for j, cell in enumerate(cells):
-                    m = DATE_RE.search(cell)
+                for j, cell in enumerate(row):
+                    m = DATE_RE.search(cell or "")
                     if m:
                         d, mo, y = map(int, m.groups())
                         try:
                             mapping[j] = date(y, mo, d).isoformat()
                         except ValueError:
                             pass
-                if len(mapping) >= 5:
+                if len(mapping) >= 4:
                     header_idx, col_date = i, mapping
                     break
             if header_idx is None:
                 continue
 
-            # --- refeição da página: texto vertical na 1ª/2ª coluna
+            # --- coluna de rótulos: primeira coluna fora do mapa de datas
+            #     cujas células casam com rótulos conhecidos em >= 3 linhas
+            label_col = None
+            for j in range(max(col_date)):
+                if j in col_date:
+                    continue
+                hits = sum(1 for row in table[header_idx + 1:]
+                           if j < len(row) and match_label(row[j] or ""))
+                if hits >= 3:
+                    label_col = j
+                    break
+            if label_col is None:
+                continue
+
+            # --- refeição da página: texto vertical nas colunas à esquerda
             page_meal = None
-            for j in (1, 0, 2):
+            for j in range(0, max(3, label_col)):
+                if any(j == dj for dj in col_date):
+                    continue
                 vertical = " ".join((row[j] or "") for row in table if len(row) > j)
                 page_meal = match_meal(vertical) or match_meal(vertical[::-1])
                 if page_meal:
@@ -137,44 +201,131 @@ def parse_pdf(path):
             # --- linhas de itens
             for row in table[header_idx + 1:]:
                 cells = [c or "" for c in row]
-                label_raw = cells[3] if len(cells) > 3 else ""
-                label = match_label(label_raw)
+                if len(cells) <= label_col:
+                    continue
+                label = match_label(cells[label_col])
                 if not label:
                     continue
-                text_by_col = {}
                 for j, iso in col_date.items():
                     value = re.sub(r"\s*\n\s*", " ", cells[j]).strip() if j < len(cells) else ""
-                    if value:
-                        text_by_col[iso] = re.sub(r"\s+", " ", value)
-                for iso, value in text_by_col.items():
+                    if not value:
+                        continue
                     entries = days.setdefault(iso, {}).setdefault(page_meal, [])
                     if not any(e["label"] == LABEL_PRETTY[label] for e in entries):
-                        entries.append({"label": LABEL_PRETTY[label], "value": value})
+                        entries.append({"label": LABEL_PRETTY[label],
+                                        "value": re.sub(r"\s+", " ", value)})
     return days
 
 
-def discover_pdfs():
-    req = Request(LISTING_URL, headers={"User-Agent": UA})
+# ---------------------------------------------------------------------------
+# Parser do Restaurante Executivo (sem grade, categorias por página)
+# ---------------------------------------------------------------------------
+EXEC_CATS = ["Saladas", "Pratos principais", "Guarnições",
+             "Acompanhamentos", "Sobremesas"]
+EXEC_HEADER_TOP = 178   # palavras acima disso são cabeçalho/logo
+EXEC_LINE_TOL = 3.0     # tolerância para agrupar palavras na mesma linha
+EXEC_BLOCK_GAP = 12.0   # gap vertical (pt) que separa dois itens
+
+
+def parse_executivo_pdf(path):
+    """Parser do formato Executivo: retorna {data_iso: [{'label','value'}]}."""
+    out = {}
+    with pdfplumber.open(path) as pdf:
+        # datas/bordas de coluna vêm da primeira página (idênticas nas demais)
+        p0 = pdf.pages[0]
+        dw = [(w["text"], (w["x0"] + w["x1"]) / 2) for w in p0.extract_words()
+              if DATE_RE.fullmatch(w["text"])]
+        if not dw:
+            return out
+        centers = sorted(c for _, c in dw)
+        bounds = ([0.0]
+                  + [(a + b) / 2 for a, b in zip(centers, centers[1:])]
+                  + [float("inf")])
+        isos = []
+        for t, _ in sorted(dw, key=lambda x: x[1]):
+            d, m, y = t.split("/")
+            isos.append(f"{y}-{int(m):02d}-{int(d):02d}")
+        for iso in isos:
+            out.setdefault(iso, [])
+
+        for i, page in enumerate(pdf.pages):
+            cat = EXEC_CATS[i] if i < len(EXEC_CATS) else f"Categoria {i + 1}"
+            words = page.extract_words()
+
+            cols = {j: [] for j in range(len(isos))}
+            for w in words:
+                if w["top"] < EXEC_HEADER_TOP:
+                    continue
+                xc = (w["x0"] + w["x1"]) / 2
+                j = next((k for k in range(len(bounds) - 1)
+                          if bounds[k] <= xc < bounds[k + 1]), None)
+                if j is not None and j < len(isos):
+                    cols[j].append(w)
+
+            for j, ws in cols.items():
+                if not ws:
+                    continue
+                # agrupar palavras em linhas visuais
+                lines = {}
+                for w in ws:
+                    key = next((k for k in lines if abs(k - w["top"]) <= EXEC_LINE_TOL),
+                               round(w["top"], 1))
+                    lines.setdefault(key, []).append(w)
+                sorted_lines = sorted(lines.items())
+
+                # agrupar linhas consecutivas em blocos (itens)
+                blocks, cur, last_top = [], [], None
+                for top, lws in sorted_lines:
+                    if last_top is not None and top - last_top > EXEC_BLOCK_GAP:
+                        blocks.append(cur)
+                        cur = []
+                    cur.append((top, lws))
+                    last_top = top
+                if cur:
+                    blocks.append(cur)
+
+                for b in blocks:
+                    parts = []
+                    for _, lws in b:
+                        lws2 = sorted(lws, key=lambda w: w["x0"])
+                        parts.append(" ".join(w["text"] for w in lws2))
+                    text = re.sub(r"\s+", " ", " ".join(parts)).strip(" ,;")
+                    if len(text) < 2:
+                        continue
+                    out[isos[j]].append({"label": cat, "value": text})
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Descoberta/download
+# ---------------------------------------------------------------------------
+def discover_pdfs(listing_url, pattern):
+    req = Request(listing_url, headers={"User-Agent": UA})
     html = urlopen(req, timeout=30).read().decode("utf-8", "replace")
-    links = sorted(set(re.findall(r'href="([^"]*Darcy-Ribeiro[^"]*\.pdf)"', html, re.I)))
-    return [u.replace("http://", "https://") for u in links]
+    links = sorted(set(re.findall(r'href="([^"]*\.pdf)"', html, re.I)))
+    links = [u.replace("http://", "https://") for u in links]
+    return [u for u in links if re.search(pattern, u.split("/")[-1], re.I)]
+
+
+def range_of(url):
+    ds = []
+    for d, m, y in DATE_RE.findall(url.split("/")[-1]):
+        try:
+            ds.append(date(int(y), int(m), int(d)))
+        except ValueError:
+            pass
+    return (min(ds), max(ds)) if ds else (None, None)
 
 
 def pick_current(links, today=None):
     """Escolhe os PDFs cujo intervalo de datas cobre hoje."""
-    today = today or date.today()
+    today = today or datetime.now(TZ_BSB).date()
 
-    def range_of(url):
-        ds = []
-        for d, m, y in DATE_RE.findall(url.split("/")[-1]):
-            try:
-                ds.append(date(int(y), int(m), int(d)))
-            except ValueError:
-                pass
-        return (min(ds), max(ds)) if ds else (None, None)
+    def covers(u):
+        r = range_of(u)
+        return r[0] is not None and r[0] <= today <= r[1]
 
-    covering = [u for u in links
-                if (lambda r: r[0] and r[0] <= today <= r[1])(range_of(u))]
+    covering = [u for u in links if covers(u)]
     return covering[:1] if covering else links[-1:]
 
 
@@ -184,43 +335,109 @@ def download(url, dest):
     return dest
 
 
-def main():
-    DATA_DIR.mkdir(exist_ok=True)
-    sources = []
-    merged = {}
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+def process_campus(key, cfg, today=None):
+    """Baixa o PDF vigente do campus e gera site/data/cardapio-<key>.json."""
+    print(f"\n=== {key} ({cfg['name']}) ===")
+    print("Descobrindo PDFs em", cfg["listing"])
+    links = discover_pdfs(cfg["listing"], cfg["pattern"])
+    print(f"{len(links)} PDF(s):", *("  " + l for l in links), sep="\n")
+    chosen = pick_current(links, today=today)
+    print("Usando:", chosen)
 
-    args = sys.argv[1:]
-    if args:
-        pdfs = [(None, Path(a)) for a in args]
-    else:
-        print("Descobrindo PDFs em", LISTING_URL)
-        links = discover_pdfs()
-        print(f"{len(links)} PDF(s) encontrados:", *("  " + l for l in links), sep="\n")
-        chosen = pick_current(links)
-        print("Usando:", chosen)
-        pdfs = []
-        for u in chosen:
-            p = download(u, DATA_DIR / u.split("/")[-1])
-            pdfs.append((u, p))
+    sources, merged = [], {}
+    for u in chosen:
+        p = DATA_DIR / f"{key}-{u.split('/')[-1]}"
+        download(u, p)
+        src = {"file": p.name, "url": u}
 
-    for source, path in pdfs:
-        week = parse_pdf(path)
-        print(f"{path.name}: {len(week)} dia(s) extraido(s)")
-        if not week:
-            sys.exit(f"ERRO: nada extraído de {path}")
+        if key == "executivo":
+            week_flat = parse_executivo_pdf(p)
+            print(f"{p.name}: {len(week_flat)} dia(s) extraído(s)")
+            if not week_flat:
+                sys.exit(f"ERRO: nada extraído de {p}")
+            # formato plano -> uma única "refeição"
+            week = {iso: {"principal": items} for iso, items in week_flat.items()}
+        else:
+            week = parse_table_pdf(p)
+            print(f"{p.name}: {len(week)} dia(s) extraído(s)")
+            if not week:
+                sys.exit(f"ERRO: nada extraído de {p}")
+
         merged.update(week)
-        sources.append({"file": path.name, "url": source})
+        sources.append(src)
+
+    meals_order = ["principal"] if key == "executivo" else MEAL_ORDER
+    meals_names = {"principal": "Cardápio"} if key == "executivo" else MEAL_PRETTY
 
     out = {
-        "campus": "Darcy Ribeiro",
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "meals_order": MEAL_ORDER,
-        "meals_names": MEAL_PRETTY,
+        "campus": key,
+        "campus_name": cfg["name"],
+        "generated_at": datetime.now(TZ_BSB).isoformat(timespec="seconds"),
+        "meals_order": meals_order,
+        "meals_names": meals_names,
         "sources": sources,
         "days": dict(sorted(merged.items())),
     }
-    OUT_JSON.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"OK -> {OUT_JSON} ({len(out['days'])} dias)")
+    SITE_DATA.mkdir(exist_ok=True)
+    dest = SITE_DATA / f"cardapio-{key}.json"
+    dest.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"OK -> {dest} ({len(out['days'])} dias)")
+    return out
+
+
+def main():
+    DATA_DIR.mkdir(exist_ok=True)
+    args = sys.argv[1:]
+    keys = list(CAMPUS)
+
+    if "--pdf" in args:
+        # modo teste local: --pdf <campus> <arquivo.pdf>
+        i = args.index("--pdf")
+        key, path = args[i + 1], Path(args[i + 2])
+        cfg = CAMPUS[key]
+        parser = parse_executivo_pdf if key == "executivo" else parse_table_pdf
+        week = parser(path)
+        if key == "executivo":
+            week = {iso: {"principal": items} for iso, items in week.items()}
+        out = {
+            "campus": key,
+            "campus_name": cfg["name"],
+            "generated_at": datetime.now(TZ_BSB).isoformat(timespec="seconds"),
+            "meals_order": ["principal"] if key == "executivo" else MEAL_ORDER,
+            "meals_names": {"principal": "Cardápio"} if key == "executivo" else MEAL_PRETTY,
+            "sources": [{"file": path.name, "url": None}],
+            "days": dict(sorted(week.items())),
+        }
+        SITE_DATA.mkdir(exist_ok=True)
+        dest = SITE_DATA / f"cardapio-{key}.json"
+        dest.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"OK -> {dest} ({len(out['days'])} dias)")
+        return
+
+    if args:
+        unknown = [a for a in args if a not in CAMPUS]
+        if unknown:
+            sys.exit(f"Campus desconhecido: {unknown}. Opções: {list(CAMPUS)}")
+        keys = args
+
+    today = datetime.now(TZ_BSB).date()
+    results = {}
+    failures = []
+    for k in keys:
+        try:
+            results[k] = process_campus(k, CAMPUS[k], today=today)
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"ERRO em {k}: {e}")
+            failures.append(k)
+
+    if failures:
+        print("\nFalhou em:", failures)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
