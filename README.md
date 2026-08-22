@@ -1,7 +1,6 @@
-# UnBRU Clone — Cardápio RU Darcy Ribeiro (UnB)
+# UnB — Cardápio RU Darcy Ribeiro (UnB)
 
-Versão própria e funcional do site unbru.info (que está fora do ar — ver análise
-abaixo), consumindo diretamente os PDFs oficiais de
+Versão simplificada e minimalista do cardápio do RU da UnB, utiliza os PDFs oficiais de
 [ru.unb.br/cardapio](https://ru.unb.br/cardapio/).
 
 ## Estrutura
