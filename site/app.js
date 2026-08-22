@@ -1,5 +1,5 @@
 /* Cardápio RU – front-end estático.
-   Busca data/cardapio.json; se falhar, tenta cache local (localStorage). */
+   Busca data/cardapio.json; se falhar, usa cache local (localStorage). */
 
 const MEAL_ORDER = ["cafe", "almoco", "jantar"];
 const MEAL_NAMES = {
@@ -7,12 +7,14 @@ const MEAL_NAMES = {
   almoco: "Almoço",
   jantar: "Jantar",
 };
+const HIGHLIGHT = ["Prato Principal Padrão", "Sopa"]; // itens com destaque visual
 
 const DOW_LONG = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 let state = {
   data: null,
-  selectedDay: null,   // ISO
+  stale: false,
+  selectedDay: null,
   selectedMeal: "almoco",
 };
 
@@ -42,68 +44,95 @@ function fmtDay(iso) {
   return { dow: DOW_LONG[dt.getDay()], dom: d };
 }
 
-function render() {
-  const tabs = document.getElementById("day-tabs");
-  const card = document.getElementById("menu-card");
-  const updatedAt = document.getElementById("updated-at");
-  const sourceLink = document.getElementById("source-link");
-  if (!state.data) {
-    card.innerHTML = `<div class="unavailable"><span class="big">🍽️</span>
-      Não foi possível carregar o cardápio.<br>Verifique sua conexão e recarregue a página.</div>`;
-    return;
+function renderStatus() {
+  const banner = document.getElementById("status-banner");
+  if (state.stale) {
+    banner.textContent = "⚠ Não foi possível atualizar agora — exibindo o último cardápio salvo.";
+    banner.hidden = false;
+  } else {
+    banner.hidden = true;
   }
-  const { days, generated_at, sources } = state.data;
-  const isos = Object.keys(days);
+}
 
-  // abas de dias
+function renderTabs() {
+  const tabs = document.getElementById("day-tabs");
+  const isos = Object.keys(state.data.days);
+  const today = todayISO();
   tabs.innerHTML = "";
   for (const iso of isos) {
     const { dow, dom } = fmtDay(iso);
     const btn = document.createElement("button");
     btn.className = "day-tab" + (iso === state.selectedDay ? " active" : "");
-    btn.innerHTML = `<span class="dow">${dow}</span><span class="dom">${dom}</span>`;
+    if (iso === today) btn.title = "Hoje";
+    btn.innerHTML = `<span class="dow">${dow}${iso === today ? " · hoje" : ""}</span><span class="dom">${dom}</span>`;
     btn.addEventListener("click", () => {
       state.selectedDay = iso;
       render();
     });
     tabs.appendChild(btn);
   }
-
-  // rola a aba ativa para o meio
   const active = tabs.querySelector(".day-tab.active");
-  if (active) active.scrollIntoView({ inline: "center", block: "nearest" });
+  if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+}
 
-  // cardápio do dia
-  const dayMenu = days[state.selectedDay] || {};
+function renderMenu() {
+  const card = document.getElementById("menu-card");
+  const dayMenu = state.data.days[state.selectedDay] || {};
   const items = dayMenu[state.selectedMeal];
+
+  card.style.animation = "none";
+  void card.offsetWidth; // reinicia a animação
+  card.style.animation = "";
+
   if (!items || !items.length) {
     card.innerHTML = `<div class="unavailable"><span class="big">🍽️</span>
       Cardápio indisponível para esta refeição.</div>`;
-  } else {
-    const dl = document.createElement("dl");
-    for (const it of items) {
-      const wrap = document.createElement("div");
-      wrap.className = "menu-item";
-      const dt = document.createElement("dt");
-      dt.textContent = it.label;
-      const dd = document.createElement("dd");
-      dd.textContent = it.value;
-      wrap.append(dt, dd);
-      dl.appendChild(wrap);
-    }
-    card.innerHTML = "";
-    card.appendChild(dl);
+    return;
   }
 
-  // rodapé / fonte
+  const dl = document.createElement("dl");
+  for (const it of items) {
+    const wrap = document.createElement("div");
+    wrap.className = "menu-item" + (HIGHLIGHT.includes(it.label) ? " highlight" : "");
+    const dt = document.createElement("dt");
+    dt.textContent = it.label;
+    const dd = document.createElement("dd");
+    dd.textContent = it.value;
+    wrap.append(dt, dd);
+    dl.appendChild(wrap);
+  }
+  card.innerHTML = "";
+  card.appendChild(dl);
+}
+
+function renderFooter() {
+  const updatedAt = document.getElementById("updated-at");
+  const sourceLink = document.getElementById("source-link");
+  const { generated_at, sources } = state.data;
+
   updatedAt.textContent =
     `Atualizado em ${new Date(generated_at).toLocaleString("pt-BR")}` +
-    (state.stale ? " · ⚠ exibindo dados salvos (offline)" : "");
+    (state.stale ? " · dados salvos" : "");
+
   const src = sources && sources.find(s => s.url);
   if (src) {
     sourceLink.href = src.url;
     sourceLink.hidden = false;
   }
+}
+
+function render() {
+  if (!state.data) {
+    document.getElementById("menu-card").innerHTML =
+      `<div class="unavailable"><span class="big">🍽️</span>
+       Não foi possível carregar o cardápio.<br>Verifique sua conexão e recarregue a página.</div>`;
+    document.getElementById("day-tabs").innerHTML = "";
+    return;
+  }
+  renderStatus();
+  renderTabs();
+  renderMenu();
+  renderFooter();
 }
 
 function setupMealSwitch() {
@@ -112,7 +141,7 @@ function setupMealSwitch() {
       state.selectedMeal = btn.dataset.meal;
       document.querySelectorAll(".meal-switch button").forEach(b =>
         b.classList.toggle("active", b === btn));
-      render();
+      renderMenu();
     });
   });
 }
@@ -122,15 +151,18 @@ function setupMealSwitch() {
   const { json, stale } = await loadData();
   state.data = json;
   state.stale = stale;
+
   if (!json || !Object.keys(json.days).length) {
     render();
     return;
   }
+
   const isos = Object.keys(json.days);
   const today = todayISO();
   state.selectedDay = isos.includes(today)
     ? today
     : isos.find(i => i >= today) || isos[0];
+
   if (json.meals_order) MEAL_ORDER.splice(0, MEAL_ORDER.length, ...json.meals_order);
   Object.assign(MEAL_NAMES, json.meals_names || {});
   render();

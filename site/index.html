@@ -3,38 +3,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cardápio RU Darcy Ribeiro</title>
-  <meta name="description" content="Cardápio do Restaurante Universitário da UnB – Campus Darcy Ribeiro">
-  <meta name="theme-color" content="#49B660">
+  <title>Cardápio RU · Darcy Ribeiro</title>
+  <meta name="description" content="Cardápio do Restaurante Universitário da UnB – Campus Darcy Ribeiro, atualizado automaticamente do PDF oficial.">
+  <meta name="theme-color" content="#1e40af">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <span class="brand-icon">🍽️</span>
-      <div>
-        <h1>Cardápio RU</h1>
-        <p class="subtitle">Campus Darcy Ribeiro · UnB</p>
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-icon">🍽️</span>
+        <div>
+          <h1>Cardápio RU</h1>
+          <p class="subtitle">Campus Darcy Ribeiro · UnB</p>
+        </div>
       </div>
+      <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener" hidden>
+        <span>PDF oficial</span><span class="arrow">↗</span>
+      </a>
     </div>
-    <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener" hidden>PDF oficial ↗</a>
+    <p id="status-banner" class="status-banner" hidden></p>
   </header>
 
   <nav class="day-tabs" id="day-tabs" aria-label="Dias da semana"></nav>
 
-  <main>
+  <main class="container">
     <section class="meal-switch" role="tablist" aria-label="Refeições">
-      <button role="tab" data-meal="cafe">Café da manhã</button>
-      <button role="tab" data-meal="almoco" class="active">Almoço</button>
-      <button role="tab" data-meal="jantar">Jantar</button>
+      <button role="tab" data-meal="cafe"><span class="meal-ico">☕</span>Café da manhã</button>
+      <button role="tab" data-meal="almoco" class="active"><span class="meal-ico">🍛</span>Almoço</button>
+      <button role="tab" data-meal="jantar"><span class="meal-ico">🌙</span>Jantar</button>
     </section>
 
     <section id="menu-card" class="menu-card" aria-live="polite"></section>
 
     <footer class="page-footer">
       <p id="updated-at"></p>
-      <p class="disclaimer">Cardápio sujeito a alterações. Fonte oficial:
-        <a href="https://ru.unb.br/cardapio/" target="_blank" rel="noopener">ru.unb.br</a></p>
+      <p class="disclaimer">Cardápio sujeito a alterações · Fonte oficial:
+        <a href="https://ru.unb.br/cardapio/" target="_blank" rel="noopener">ru.unb.br/cardapio</a></p>
     </footer>
   </main>
 
