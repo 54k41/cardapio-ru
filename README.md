@@ -6,7 +6,7 @@ Versão simplificada e minimalista do cardápio do RU da UnB, utiliza os PDFs of
 ## Estrutura
 
 ```
-unbru-clone/
+cardapio-ru/
 ├── scripts/
 │   └── fetch_cardapio.py   # baixa PDFs oficiais → extrai → gera data/cardapio.json
 ├── site/                   # front-end estático (index.html + app.js + styles.css)
