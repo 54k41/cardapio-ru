@@ -1,0 +1,5 @@
+# ambiente python
+.venv/
+
+# PDFs baixados (o script baixa de novo a cada execução)
+data/*.pdf

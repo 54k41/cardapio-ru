@@ -1,0 +1,50 @@
+name: Atualizar cardápio do RU
+
+on:
+  schedule:
+    - cron: "0 9 * * *"    # 09:00 UTC (06:00 Brasília) — pega publicação matinal
+    - cron: "0 15 * * *"   # 15:00 UTC (12:00 Brasília) — reforço ao meio-dia
+  workflow_dispatch: {}     # permite rodar manualmente
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install pdfplumber
+
+      - name: Buscar cardápio da semana
+        run: python scripts/fetch_cardapio.py
+
+      - name: Publicar dados no site
+        run: python build.py
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

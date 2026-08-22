@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cardápio RU Darcy Ribeiro</title>
+  <meta name="description" content="Cardápio do Restaurante Universitário da UnB – Campus Darcy Ribeiro">
+  <meta name="theme-color" content="#49B660">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🍽️</span>
+      <div>
+        <h1>Cardápio RU</h1>
+        <p class="subtitle">Campus Darcy Ribeiro · UnB</p>
+      </div>
+    </div>
+    <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener" hidden>PDF oficial ↗</a>
+  </header>
+
+  <nav class="day-tabs" id="day-tabs" aria-label="Dias da semana"></nav>
+
+  <main>
+    <section class="meal-switch" role="tablist" aria-label="Refeições">
+      <button role="tab" data-meal="cafe">Café da manhã</button>
+      <button role="tab" data-meal="almoco" class="active">Almoço</button>
+      <button role="tab" data-meal="jantar">Jantar</button>
+    </section>
+
+    <section id="menu-card" class="menu-card" aria-live="polite"></section>
+
+    <footer class="page-footer">
+      <p id="updated-at"></p>
+      <p class="disclaimer">Cardápio sujeito a alterações. Fonte oficial:
+        <a href="https://ru.unb.br/cardapio/" target="_blank" rel="noopener">ru.unb.br</a></p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
