@@ -1,6 +1,13 @@
 name: Atualizar cardápio do RU
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/**"
+      - "build.py"
+      - ".github/workflows/**"
   schedule:
     - cron: "0 9 * * *"    # 06:00 Brasília
     - cron: "0 15 * * *"   # 12:00 Brasília
