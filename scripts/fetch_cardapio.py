@@ -199,6 +199,26 @@ def parse_table_pdf(path):
                 continue
 
             # --- linhas de itens
+            # Nos PDFs mais recentes o cabeçalho vem em DUAS linhas
+            # (row0 = "2ª FEIRA", row1 = "24/8/2026") e a grade cria colunas
+            # deslocadas: a data fica na coluna j, mas os VALORES caem em j-1.
+            # Mapeia cada data para a coluna de valor real: se a coluna da data
+            # estiver sempre vazia nas linhas de item e a anterior (j-1) tiver
+            # conteúdo, usa j-1.
+            def value_col_for(j):
+                empty_at_j = all(
+                    not (row[j] if j < len(row) else "") or
+                    not str(row[j]).strip()
+                    for row in table[header_idx + 1:]
+                )
+                has_prev = all(
+                    j - 1 < len(row) and str(row[j - 1] or "").strip()
+                    for row in table[header_idx + 1:]
+                )
+                return j - 1 if (empty_at_j and j > 0 and has_prev) else j
+
+            col_value = {j: value_col_for(j) for j in col_date}
+
             for row in table[header_idx + 1:]:
                 cells = [c or "" for c in row]
                 if len(cells) <= label_col:
@@ -207,7 +227,8 @@ def parse_table_pdf(path):
                 if not label:
                     continue
                 for j, iso in col_date.items():
-                    value = re.sub(r"\s*\n\s*", " ", cells[j]).strip() if j < len(cells) else ""
+                    vcol = col_value[j]
+                    value = re.sub(r"\s*\n\s*", " ", cells[vcol]).strip() if vcol < len(cells) else ""
                     if not value:
                         continue
                     entries = days.setdefault(iso, {}).setdefault(page_meal, [])
