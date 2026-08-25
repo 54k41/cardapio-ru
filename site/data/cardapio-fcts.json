@@ -1,7 +1,7 @@
 {
   "campus": "fcts",
   "campus_name": "Ceilândia (FCTS)",
-  "generated_at": "2026-08-22T13:58:45-03:00",
+  "generated_at": "2026-08-24T08:04:36-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,132 +14,120 @@
   },
   "sources": [
     {
-      "file": "fcts.pdf",
-      "url": null
+      "file": "fcts-Ceilandia-Semana-01-24-8-a-30-8.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/08/Ceilandia-Semana-01-24-8-a-30-8.pdf"
     }
   ],
   "days": {
-    "2026-08-17": {
+    "2026-08-24": {
       "cafe": [
         {
           "label": "Bebida (Refresco de)",
-          "value": "Leite integral OU Bebida de soja"
+          "value": "Leite Integral OU Bebida de Soja"
         },
+        {
+          "label": "Panificação",
+          "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Gordura",
+          "value": "Manteiga ou Creme Vegetal"
+        },
+        {
+          "label": "Complemento Padrão",
+          "value": "Ovos mexidos"
+        },
+        {
+          "label": "Complemento Ovolactovegetariano",
+          "value": "Queijo muçarela"
+        },
+        {
+          "label": "Complemento Vegetariano Estrito",
+          "value": "Geleia de maçã com chia e canela"
+        },
+        {
+          "label": "Fruta",
+          "value": "Melancia"
+        }
+      ]
+    },
+    "2026-08-25": {
+      "cafe": [
+        {
+          "label": "Panificação",
+          "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Complemento Padrão",
+          "value": "Patê de frango"
+        },
+        {
+          "label": "Complemento Ovolactovegetariano",
+          "value": "Queijo minas"
+        },
+        {
+          "label": "Complemento Vegetariano Estrito",
+          "value": "Tofu"
+        },
+        {
+          "label": "Fruta",
+          "value": "Melão"
+        }
+      ]
+    },
+    "2026-08-26": {
+      "cafe": [
+        {
+          "label": "Panificação",
+          "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Complemento Padrão",
+          "value": "Carne bovina desfiada"
+        },
+        {
+          "label": "Complemento Ovolactovegetariano",
+          "value": "Queijo muçarela"
+        },
+        {
+          "label": "Complemento Vegetariano Estrito",
+          "value": "Pasta de amendoim"
+        },
+        {
+          "label": "Fruta",
+          "value": "Abacaxi"
+        }
+      ]
+    },
+    "2026-08-27": {
+      "cafe": [
         {
           "label": "Panificação",
           "value": "Pão francês ou Pão careca ou"
         },
         {
           "label": "Opção Extra",
-          "value": "Mingau de aveia Mingau de aveia com canela"
-        },
-        {
-          "label": "Gordura",
-          "value": "Manteiga ou creme vegetal"
+          "value": "Milho cozido"
         },
         {
           "label": "Complemento Padrão",
-          "value": "Frango desfiado"
-        },
-        {
-          "label": "Complemento Ovolactovegetariano",
           "value": "Ovos mexidos"
         },
         {
+          "label": "Complemento Ovolactovegetariano",
+          "value": "Ricota temperada"
+        },
+        {
           "label": "Complemento Vegetariano Estrito",
-          "value": "Requeijão de ervas"
+          "value": "Homus de abóbora"
         },
         {
           "label": "Fruta",
-          "value": "Melancia"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Alface roxa"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Antepasto de abobrinha"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Salsa"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Berinjela recheada com quinoa gratinada"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Soja refogada com legumes"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Abóbora assada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Laranja"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Guaraná"
-        }
-      ],
-      "jantar": [
-        {
-          "label": "Salada 1",
-          "value": "Alface crespa com agrião"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Sunomono"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Rosé / Limão"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Suíno ao molho barbecue de figo OPÇÃO: Frango assado"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Bife de soja ao sugo gratinado"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Refogado de lentilha"
-        },
-        {
-          "label": "Sopa",
-          "value": "Creme de cenoura com gengibre"
-        },
-        {
-          "label": "Torrada",
-          "value": "Torrada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
           "value": "Banana"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Guaraná"
         }
       ]
     },
-    "2026-08-18": {
+    "2026-08-28": {
       "cafe": [
         {
           "label": "Panificação",
@@ -151,335 +139,19 @@
         },
         {
           "label": "Complemento Ovolactovegetariano",
-          "value": "Queijo muçarela"
-        },
-        {
-          "label": "Complemento Vegetariano Estrito",
-          "value": "Pasta de ervilha com manjericão"
-        },
-        {
-          "label": "Fruta",
-          "value": "Maçã"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Acelga"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Beterraba ralada"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Chimichurri"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Lasanha de frango"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Bolinho de milho com soja gratinado"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Yakissoba"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Chuchu com vagem"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Doce de leite OPÇÃO: Frutas"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Laranja"
-        }
-      ],
-      "jantar": [
-        {
-          "label": "Salada 1",
-          "value": "Chicória"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Rabanete"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Chipotle"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Carne ao molho de vinho"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Ovos mexidos com gergelim e queijo"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Caruru de grão de bico"
-        },
-        {
-          "label": "Sopa",
-          "value": "Caldo verde"
-        },
-        {
-          "label": "Torrada",
-          "value": "Torrada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Melão"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Laranja"
-        }
-      ]
-    },
-    "2026-08-19": {
-      "cafe": [
-        {
-          "label": "Panificação",
-          "value": "Pão francês ou Pão careca ou Pão integral"
-        },
-        {
-          "label": "Complemento Padrão",
-          "value": "Presunto"
-        },
-        {
-          "label": "Complemento Ovolactovegetariano",
           "value": "Queijo minas"
         },
         {
           "label": "Complemento Vegetariano Estrito",
-          "value": "Guacamole"
+          "value": "Pasta de ervilha"
         },
         {
           "label": "Fruta",
-          "value": "Abacaxi"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Alface com mostarda"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Abóbora ralada"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Manjericão / Limão"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Suíno ao molho de mostarda Opção: Carne moída"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Escondidinho de lentilha gratinado"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Abobrinha recheada com lentilha ao sugo"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Mix de batatas assadas"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Banana"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Maracujá"
-        }
-      ],
-      "jantar": [
-        {
-          "label": "Salada 1",
-          "value": "Repolho roxo"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Cenoura cozida"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Alho e limão"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Strogonoff de frango"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Risoto de espinafre com queijo"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Strogonoff vegetariano"
-        },
-        {
-          "label": "Sopa",
-          "value": "Sopa canjiquinha"
-        },
-        {
-          "label": "Torrada",
-          "value": "Torrada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Melancia"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Maracujá"
-        }
-      ]
-    },
-    "2026-08-20": {
-      "cafe": [
-        {
-          "label": "Panificação",
-          "value": "Pão francês ou Pão careca ou"
-        },
-        {
-          "label": "Opção Extra",
-          "value": "Cuscuz de milho"
-        },
-        {
-          "label": "Complemento Padrão",
-          "value": "Carne bovina desfiada"
-        },
-        {
-          "label": "Complemento Ovolactovegetariano",
-          "value": "Creme de ricota com azeitona"
-        },
-        {
-          "label": "Complemento Vegetariano Estrito",
-          "value": "Amendotela"
-        },
-        {
-          "label": "Fruta",
-          "value": "Melão"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Mix de folhas"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Tomate, cebola e pimentão em cubos"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Gengibre"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Filé de frango com manteiga de ervas"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Suflê de chuchu"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Quinoa com legumes refogados"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Macarrão parafuso temperado"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
-        },
-        {
-          "label": "Sobremesa",
           "value": "Maçã"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Uva"
-        }
-      ],
-      "jantar": [
-        {
-          "label": "Salada 1",
-          "value": "Alface crespa com laranja"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Tabule"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Ervas finas"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Carne ao molho escuro"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Omelete de vegetais"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Moqueca de vegetais com ervilha, palmito e castanhas"
-        },
-        {
-          "label": "Sopa",
-          "value": "Creme de cebola caramelizada"
-        },
-        {
-          "label": "Torrada",
-          "value": "Torrada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Mix de doces OPÇÃO: Fruta"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Uva"
         }
       ]
     },
-    "2026-08-21": {
+    "2026-08-29": {
       "cafe": [
         {
           "label": "Panificação",
@@ -487,173 +159,19 @@
         },
         {
           "label": "Complemento Padrão",
-          "value": "Ovos mexidos"
+          "value": "Frango desfiado"
         },
         {
           "label": "Complemento Ovolactovegetariano",
-          "value": "Bebida láctea"
+          "value": "Pasta de ricota"
         },
         {
           "label": "Complemento Vegetariano Estrito",
-          "value": "Pasta de feijão branco com salsinha e orégano"
+          "value": "Maionese de abacate"
         },
         {
           "label": "Fruta",
           "value": "Salada de frutas"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Repolho branco com passas"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Pepino agridoce"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Hortelã / Limão"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Peixe ao molho branco gratinado OPÇÃO: Carne desfiada"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Tomate recheado com homus de grão de bico gratinado"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Refogado de grão de bico"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Abobrinha refogada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Melancia"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Morango"
-        }
-      ],
-      "jantar": [
-        {
-          "label": "Salada 1",
-          "value": "Hakussai"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Tomate"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Salsa"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Isca de frango ao creme de milho"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Lasanha de brócolis"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Guisado de legumes com grãos de soja ao leite de coco"
-        },
-        {
-          "label": "Sopa",
-          "value": "Creme de legumes"
-        },
-        {
-          "label": "Torrada",
-          "value": "Torrada"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Laranja"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Morango"
-        }
-      ]
-    },
-    "2026-08-22": {
-      "cafe": [
-        {
-          "label": "Panificação",
-          "value": "Pão francês ou Pão careca ou Pão integral"
-        },
-        {
-          "label": "Complemento Padrão",
-          "value": "Queijo muçarela"
-        },
-        {
-          "label": "Complemento Ovolactovegetariano",
-          "value": "Omelete de forno"
-        },
-        {
-          "label": "Complemento Vegetariano Estrito",
-          "value": "Geleia de goiaba e chia"
-        },
-        {
-          "label": "Fruta",
-          "value": "Mamão"
-        }
-      ],
-      "almoco": [
-        {
-          "label": "Salada 1",
-          "value": "Alface lisa"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Cenoura cozida"
-        },
-        {
-          "label": "Molho para Salada",
-          "value": "Ácido"
-        },
-        {
-          "label": "Prato Principal Padrão",
-          "value": "Frango assado com azeitonas"
-        },
-        {
-          "label": "Prato Principal Ovolactovegetariano",
-          "value": "Fricassê de palmito com legumes"
-        },
-        {
-          "label": "Prato Principal Vegetariano Estrito",
-          "value": "Hambúrguer de soja assado"
-        },
-        {
-          "label": "Guarnição",
-          "value": "Repolho com maçã e passas"
-        },
-        {
-          "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
-        },
-        {
-          "label": "Sobremesa",
-          "value": "Mexerica"
-        },
-        {
-          "label": "Bebida (Refresco de)",
-          "value": "Acerola"
         }
       ]
     }

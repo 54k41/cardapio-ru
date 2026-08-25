@@ -308,12 +308,36 @@ def discover_pdfs(listing_url, pattern):
 
 
 def range_of(url):
+    """Intervalo de datas coberto pelo PDF, inferido do nome do arquivo.
+
+    Formatos conhecidos:
+      .../Darcy-Ribeiro-Semana-01-24-8-a-30-8.pdf  -> 24/8 a 30/8 (ano no path)
+      .../Cardapio-24-8-2026-a-30-8-2026.pdf       -> idem, com ano explícito
+      datas com barras também são aceitas (24/8/2026)
+    """
+    name = url.split("/")[-1]
+    # ano: procura /2026/ no caminho (padrão WordPress) ou 4 dígitos no nome
+    year_match = re.search(r"/(20\d{2})/", url) or re.search(r"(20\d{2})", name)
+    year = int(year_match.group(1)) if year_match else date.today().year
+
     ds = []
-    for d, m, y in DATE_RE.findall(url.split("/")[-1]):
+    # 1) formato completo d/m/aaaa
+    for d, m, y in DATE_RE.findall(name):
         try:
             ds.append(date(int(y), int(m), int(d)))
         except ValueError:
             pass
+    # 2) formato curto d-m (ex.: "Semana-04-17-8-A-23-8" -> 17/8 e 23/8)
+    if not ds:
+        # "17-8" = dia-mês; o sufixo (?!-?\d) garante que o mês não é seguido
+        # de outro número (descarta "04-17" do prefixo "Semana-04")
+        for d, m in re.findall(r"(\d{1,2})-(\d{1,2})(?!-?\d)", name):
+            d, m = int(d), int(m)
+            if 1 <= d <= 31 and 1 <= m <= 12:
+                try:
+                    ds.append(date(year, m, d))
+                except ValueError:
+                    pass
     return (min(ds), max(ds)) if ds else (None, None)
 
 
