@@ -14,7 +14,7 @@ on:
   workflow_dispatch: {}     # execução manual
 
 permissions:
-  contents: read
+  contents: write   # commitar os JSONs atualizados de volta no repo
   pages: write
   id-token: write
 
@@ -43,6 +43,18 @@ jobs:
 
       - name: Publicar dados no site
         run: python build.py
+
+      - name: Commitar dados atualizados no repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/data/
+          if git diff --cached --quiet; then
+            echo "Nenhum dado alterado — nada a commitar"
+          else
+            git commit -m "Dados do cardápio atualizados automaticamente [skip ci]"
+            git push
+          fi
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5

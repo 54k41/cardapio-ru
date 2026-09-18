@@ -38,5 +38,6 @@ Também é possível converter PDFs locais:
 
 ## Automação (GitHub Actions)
 
-`.github/workflows/update.yml` roda `fetch_cardapio.py` duas vezes por dia e
-publica no GitHub Pages — o site se mantém sozinho.
+`.github/workflows/update.yml` roda `fetch_cardapio.py` duas vezes por dia,
+commita os JSONs atualizados de volta no repositório (autor: `github-actions[bot]`)
+e publica no GitHub Pages — o site se mantém sozinho.
