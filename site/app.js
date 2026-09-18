@@ -36,6 +36,14 @@ function todayISO() {
   return `${bsb.getFullYear()}-${String(bsb.getMonth() + 1).padStart(2, "0")}-${String(bsb.getDate()).padStart(2, "0")}`;
 }
 
+function weekStartISO(iso) {
+  // Segunda-feira da semana de `iso` (semanas do RU começam na segunda)
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() - (dt.getDay() + 6) % 7);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+}
+
 function campusFile(id) {
   return `data/cardapio-${id}.json`;
 }
@@ -49,8 +57,12 @@ async function loadCampus(id) {
     return { json, stale: false };
   } catch (e) {
     console.warn("Falha ao buscar cardápio:", e);
-    const cached = localStorage.getItem(`cardapio-cache-${id}`);
-    if (cached) return { json: JSON.parse(cached), stale: true };
+    try {
+      const cached = localStorage.getItem(`cardapio-cache-${id}`);
+      if (cached) return { json: JSON.parse(cached), stale: true };
+    } catch (cacheErr) {
+      console.warn("Cache local inválido:", cacheErr);
+    }
     return { json: null, stale: false };
   }
 }
@@ -63,8 +75,13 @@ function fmtDay(iso) {
 
 function renderStatus() {
   const banner = document.getElementById("status-banner");
-  if (state.stale) {
-    banner.textContent = "⚠ Não foi possível atualizar agora — exibindo o último cardápio salvo.";
+  const isos = Object.keys(state.data.days);
+  // cardápio de uma semana anterior à atual (PDF novo ainda não publicado)
+  const outdated = isos.length && weekStartISO(todayISO()) > isos[isos.length - 1];
+  if (state.stale || outdated) {
+    banner.textContent = state.stale
+      ? "⚠ Não foi possível atualizar agora — exibindo o último cardápio salvo."
+      : "⚠ Exibindo o cardápio da semana anterior — a atualização da semana ainda não foi publicada.";
     banner.hidden = false;
   } else {
     banner.hidden = true;
@@ -80,6 +97,7 @@ function renderTabs() {
     const { dow, dom } = fmtDay(iso);
     const btn = document.createElement("button");
     btn.className = "day-tab" + (iso === state.selectedDay ? " active" : "");
+    btn.setAttribute("aria-pressed", iso === state.selectedDay);
     if (iso === today) btn.title = "Hoje";
     btn.innerHTML = `<span class="dow">${dow}${iso === today ? " · hoje" : ""}</span><span class="dom">${dom}</span>`;
     btn.addEventListener("click", () => {
@@ -127,15 +145,18 @@ function renderMenu() {
 function renderMealSwitch() {
   // ajusta as abas de refeição às refeições disponíveis no campus atual
   const order = state.data.meals_order || MEAL_ORDER;
-  if (!order.includes(state.selectedMeal)) state.selectedMeal = order[0];
+  // seleção pode ser de outro campus (ex.: "principal" do Executivo);
+  // prefere almoço, o padrão dos campi tabelados
+  if (!order.includes(state.selectedMeal)) state.selectedMeal = order.includes("almoco") ? "almoco" : order[0];
   const names = Object.assign({}, MEAL_NAMES, state.data.meals_names || {});
   document.querySelectorAll(".meal-switch button").forEach(btn => {
     const meal = btn.dataset.meal;
     const available = order.includes(meal);
-    btn.style.display = available ? "" : "none";
     btn.hidden = !available;
     if (!available) return;
-    btn.classList.toggle("active", meal === state.selectedMeal);
+    const active = meal === state.selectedMeal;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-selected", active);
     // rótulo pode variar por campus (ex.: "Cardápio" no Executivo)
     const label = names[meal] || meal;
     const long = btn.querySelector(".long"), short = btn.querySelector(".short");
@@ -185,9 +206,11 @@ async function selectCampus(id, { updateHash = true } = {}) {
   localStorage.setItem("cardapio-campus", id);
   if (updateHash) history.replaceState(null, "", `#${id}`);
 
-  // marca o seletor
+  // marca o seletor e o título da página
   const sel = document.getElementById("campus-select");
   if (sel) sel.value = id;
+  const meta = CAMPUS.find(c => c.id === id);
+  document.title = `Cardápio RU · ${meta ? meta.name : "UnB"}`;
 
   state.data = null;
   state.stale = false;
@@ -196,17 +219,21 @@ async function selectCampus(id, { updateHash = true } = {}) {
     `<div class="unavailable"><span class="big">⏳</span> Carregando…</div>`;
 
   const { json, stale } = await loadCampus(id);
+  if (state.campus !== id) return; // o usuário trocou de campus enquanto carregava
+
   state.data = json;
   state.stale = stale;
 
   if (json && Object.keys(json.days).length) {
     const isos = Object.keys(json.days);
     const today = todayISO();
+    // sem dia atual/ futuro no cardápio, mostra o dia mais recente disponível
+    // (o banner de "semana anterior" sinaliza a situação)
     state.selectedDay = isos.includes(today)
       ? today
-      : isos.find(i => i >= today) || isos[0];
+      : isos.find(i => i >= today) || isos[isos.length - 1];
     const order = json.meals_order || MEAL_ORDER;
-    if (!order.includes(state.selectedMeal)) state.selectedMeal = order[0];
+    if (!order.includes(state.selectedMeal)) state.selectedMeal = order.includes("almoco") ? "almoco" : order[0];
   }
   render();
 }
@@ -220,9 +247,9 @@ function setupCampusSelect() {
 function setupMealSwitch() {
   document.querySelectorAll(".meal-switch button").forEach(btn => {
     btn.addEventListener("click", () => {
+      if (!state.data) return; // ainda carregando
       state.selectedMeal = btn.dataset.meal;
-      document.querySelectorAll(".meal-switch button").forEach(b =>
-        b.classList.toggle("active", b === btn));
+      renderMealSwitch();
       renderMenu();
     });
   });
@@ -240,4 +267,10 @@ function setupMealSwitch() {
 
   await selectCampus(campus, { updateHash: false });
   setupCampusSelect();
+
+  // troca de campus ao navegar por hash (ex.: colar um link #fcte depois do load)
+  window.addEventListener("hashchange", () => {
+    const id = CAMPUS.find(c => c.id === location.hash.replace("#", ""))?.id;
+    if (id && id !== state.campus) selectCampus(id, { updateHash: false });
+  });
 })();

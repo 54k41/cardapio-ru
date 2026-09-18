@@ -16,6 +16,10 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* garante que o atributo hidden vence qualquer display declarado abaixo
+   (.source-link e .meal-switch button têm display próprio) */
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; }
 
 body {
