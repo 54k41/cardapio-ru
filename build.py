@@ -23,7 +23,12 @@ for key in CAMPUS:
         sys.exit(f"ERRO: {path.name} inválido: {e}")
     n = len(data.get("days", {}))
     if not n:
-        print(f"AVISO: {path.name} sem dias — mantendo anterior se existir no Pages")
+        # O artefato do Pages é reconstruído do zero a cada deploy: publicar
+        # um JSON vazio substituiria a versão boa no ar. Remove o arquivo para
+        # o front-end cair no cache local (localStorage).
+        path.unlink()
+        print(f"AVISO: {path.name} sem dias — removido do deploy; "
+              "o site usará o cache local")
         continue
     print(f"OK: {path.name} ({n} dias)")
     ok += 1

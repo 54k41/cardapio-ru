@@ -20,6 +20,7 @@ import sys
 import unicodedata
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
 import pdfplumber
@@ -270,8 +271,14 @@ def parse_executivo_pdf(path):
             out.setdefault(iso, [])
 
         for i, page in enumerate(pdf.pages):
-            cat = EXEC_CATS[i] if i < len(EXEC_CATS) else f"Categoria {i + 1}"
             words = page.extract_words()
+            # categoria: título no topo da página, se casar com uma conhecida
+            # (a ordem das páginas no PDF pode mudar); posição como fallback
+            top_norm = strip_accents(" ".join(w["text"] for w in words
+                                              if w["top"] < EXEC_HEADER_TOP)).lower()
+            fallback = EXEC_CATS[i] if i < len(EXEC_CATS) else f"Categoria {i + 1}"
+            cat = next((c for c in EXEC_CATS if strip_accents(c).lower() in top_norm),
+                       fallback)
 
             cols = {j: [] for j in range(len(isos))}
             for w in words:
@@ -324,7 +331,7 @@ def discover_pdfs(listing_url, pattern):
     req = Request(listing_url, headers={"User-Agent": UA})
     html = urlopen(req, timeout=30).read().decode("utf-8", "replace")
     links = sorted(set(re.findall(r'href="([^"]*\.pdf)"', html, re.I)))
-    links = [u.replace("http://", "https://") for u in links]
+    links = [urljoin(listing_url, u.replace("http://", "https://")) for u in links]
     return [u for u in links if re.search(pattern, u.split("/")[-1], re.I)]
 
 
@@ -339,7 +346,7 @@ def range_of(url):
     name = url.split("/")[-1]
     # ano: procura /2026/ no caminho (padrão WordPress) ou 4 dígitos no nome
     year_match = re.search(r"/(20\d{2})/", url) or re.search(r"(20\d{2})", name)
-    year = int(year_match.group(1)) if year_match else date.today().year
+    year = int(year_match.group(1)) if year_match else datetime.now(TZ_BSB).date().year
 
     ds = []
     # 1) formato completo d/m/aaaa
@@ -348,22 +355,42 @@ def range_of(url):
             ds.append(date(int(y), int(m), int(d)))
         except ValueError:
             pass
+    # 1b) formato completo com hífens (ex.: "Cardapio-14-9-2026-a-20-9-2026")
+    if not ds:
+        for d, m, y in re.findall(r"(\d{1,2})-(\d{1,2})-(20\d{2})", name):
+            try:
+                ds.append(date(int(y), int(m), int(d)))
+            except ValueError:
+                pass
     # 2) formato curto d-m (ex.: "Semana-04-17-8-A-23-8" -> 17/8 e 23/8)
     if not ds:
         # "17-8" = dia-mês; o sufixo (?!-?\d) garante que o mês não é seguido
         # de outro número (descarta "04-17" do prefixo "Semana-04")
-        for d, m in re.findall(r"(\d{1,2})-(\d{1,2})(?!-?\d)", name):
-            d, m = int(d), int(m)
-            if 1 <= d <= 31 and 1 <= m <= 12:
-                try:
-                    ds.append(date(year, m, d))
-                except ValueError:
-                    pass
+        pairs = [(int(d), int(m))
+                 for d, m in re.findall(r"(\d{1,2})-(\d{1,2})(?!-?\d)", name)]
+        valid_months = {m for _, m in pairs if 1 <= m <= 12}
+        for d, m in pairs:
+            if not (1 <= d <= 31 and 1 <= m <= 12):
+                # mês impossível no nome (PDF vigente do executivo:
+                # "SEMANA-04-14-09-A-18-19" -> fim é 18/09, não 18/19);
+                # se só há um mês válido no intervalo, assume ele
+                if m > 12 and len(valid_months) == 1:
+                    m = next(iter(valid_months))
+                else:
+                    continue
+            try:
+                ds.append(date(year, m, d))
+            except ValueError:
+                pass
     return (min(ds), max(ds)) if ds else (None, None)
 
 
 def pick_current(links, today=None):
-    """Escolhe os PDFs cujo intervalo de datas cobre hoje."""
+    """Escolhe os PDFs cujo intervalo de datas cobre hoje.
+
+    Sem cobertura, usa o PDF de data inicial mais recente — por data inferida,
+    não por ordem alfabética (que ordena "Semana-10" antes de "Semana-9").
+    """
     today = today or datetime.now(TZ_BSB).date()
 
     def covers(u):
@@ -371,7 +398,13 @@ def pick_current(links, today=None):
         return r[0] is not None and r[0] <= today <= r[1]
 
     covering = [u for u in links if covers(u)]
-    return covering[:1] if covering else links[-1:]
+    if covering:
+        return covering[:1]
+    if not links:
+        return []
+    latest = max(links, key=lambda u: (range_of(u)[0] or date.min, u))
+    print(f"AVISO: nenhum PDF cobre {today}; usando o mais recente ({latest})")
+    return [latest]
 
 
 def download(url, dest):
@@ -390,6 +423,8 @@ def process_campus(key, cfg, today=None):
     links = discover_pdfs(cfg["listing"], cfg["pattern"])
     print(f"{len(links)} PDF(s):", *("  " + l for l in links), sep="\n")
     chosen = pick_current(links, today=today)
+    if not chosen:
+        raise RuntimeError(f"nenhum PDF encontrado em {cfg['listing']}")
     print("Usando:", chosen)
 
     sources, merged = [], {}
@@ -402,14 +437,14 @@ def process_campus(key, cfg, today=None):
             week_flat = parse_executivo_pdf(p)
             print(f"{p.name}: {len(week_flat)} dia(s) extraído(s)")
             if not week_flat:
-                sys.exit(f"ERRO: nada extraído de {p}")
+                raise RuntimeError(f"nada extraído de {p}")
             # formato plano -> uma única "refeição"
             week = {iso: {"principal": items} for iso, items in week_flat.items()}
         else:
             week = parse_table_pdf(p)
             print(f"{p.name}: {len(week)} dia(s) extraído(s)")
             if not week:
-                sys.exit(f"ERRO: nada extraído de {p}")
+                raise RuntimeError(f"nada extraído de {p}")
 
         merged.update(week)
         sources.append(src)
@@ -474,8 +509,6 @@ def main():
     for k in keys:
         try:
             results[k] = process_campus(k, CAMPUS[k], today=today)
-        except SystemExit:
-            raise
         except Exception as e:
             print(f"ERRO em {k}: {e}")
             failures.append(k)

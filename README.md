@@ -8,13 +8,12 @@ Versão simplificada e minimalista do cardápio do RU da UnB, utiliza os PDFs of
 ```
 cardapio-ru/
 ├── scripts/
-│   └── fetch_cardapio.py   # baixa PDFs oficiais → extrai → gera data/cardapio.json
+│   └── fetch_cardapio.py   # baixa PDFs oficiais → extrai → grava site/data/cardapio-<campus>.json
 ├── site/                   # front-end estático (index.html + app.js + styles.css)
-├── data/
-│   ├── cardapio.json       # gerado pelo script
-│   └── *.pdf               # PDFs baixados
-├── build.py                # copia data/cardapio.json → site/data/
-└── .venv/                  # virtualenv (pdfplumber)
+│   └── data/               # JSONs gerados por campus (publicados no Pages)
+├── data/                   # PDFs baixados (não versionado)
+├── build.py                # valida os JSONs antes do deploy no Pages
+└── .github/workflows/update.yml  # roda 2x/dia e publica no GitHub Pages
 ```
 
 ## Uso rápido
@@ -24,9 +23,10 @@ cardapio-ru/
 uv venv .venv && uv pip install --python .venv/Scripts/python.exe pdfplumber
 
 # 2. atualizar o cardápio (descobre o PDF da semana atual sozinho)
-.venv/Scripts/python.exe scripts/fetch_cardapio.py
+.venv/Scripts/python.exe scripts/fetch_cardapio.py                 # todos os campi
+.venv/Scripts/python.exe scripts/fetch_cardapio.py darcy executivo # campi específicos
 
-# 3. publicar
+# 3. validar antes de publicar
 .venv/Scripts/python.exe build.py
 
 # 4. testar local
@@ -34,7 +34,7 @@ cd site && python -m http.server 8080
 ```
 
 Também é possível converter PDFs locais:
-`.venv/Scripts/python.exe scripts/fetch_cardapio.py caminho/arquivo.pdf`
+`.venv/Scripts/python.exe scripts/fetch_cardapio.py --pdf darcy caminho/arquivo.pdf`
 
 ## Automação (GitHub Actions)
 
