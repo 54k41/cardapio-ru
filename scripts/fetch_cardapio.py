@@ -391,21 +391,36 @@ def range_of(url):
 
 
 def pick_current(links, today=None):
-    """Escolhe os PDFs cujo intervalo de datas cobre hoje.
+    """Escolhe o PDF cujo intervalo de datas cobre o dia de referência.
+
+    No domingo o alvo passa a ser a segunda-feira seguinte: o cardápio de
+    domingo já foi exibido a semana toda e, se a UnB já publicou o PDF da
+    semana seguinte (costuma sair antes do domingo), o site mostra a semana
+    nova desde cedo. Sem PDF da semana seguinte publicado, mantém o da
+    semana atual.
 
     Sem cobertura (virada de semana / PDF atrasado), prefere a semana futura
     mais próxima; se não houver, a mais recente já publicada — por data
     inferida, não por ordem alfabética ("Semana-10" ordena antes de "Semana-9").
     """
     today = today or datetime.now(TZ_BSB).date()
+    alvo = today + timedelta(days=1) if today.weekday() == 6 else today
 
-    def covers(u):
+    def covers(u, d):
         r = range_of(u)
-        return r[0] is not None and r[0] <= today <= r[1]
+        return r[0] is not None and r[0] <= d <= r[1]
 
-    covering = [u for u in links if covers(u)]
+    covering = [u for u in links if covers(u, alvo)]
     if covering:
+        if alvo != today:
+            print(f"Domingo: usando o PDF da semana seguinte (cobre {alvo})")
         return covering[:1]
+    if alvo != today:
+        covering = [u for u in links if covers(u, today)]
+        if covering:
+            print("AVISO: PDF da semana seguinte ainda não publicado; "
+                  "usando o da semana atual")
+            return covering[:1]
     if not links:
         return []
     futuras = sorted((u for u in links if range_of(u)[0] is not None
