@@ -40,4 +40,6 @@ Também é possível converter PDFs locais:
 
 `.github/workflows/update.yml` roda `fetch_cardapio.py` duas vezes por dia,
 commita os JSONs atualizados de volta no repositório (autor: `github-actions[bot]`)
-e publica no GitHub Pages — o site se mantém sozinho.
+e publica no GitHub Pages — o site se mantém sozinho. Se um campus falhar, os
+demais continuam sendo publicados; o campus com falha mantém o JSON anterior
+(no repositório e no Pages) — nunca é gravado um arquivo vazio por cima.

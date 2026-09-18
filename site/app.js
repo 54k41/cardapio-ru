@@ -206,9 +206,11 @@ async function selectCampus(id, { updateHash = true } = {}) {
   localStorage.setItem("cardapio-campus", id);
   if (updateHash) history.replaceState(null, "", `#${id}`);
 
-  // marca o seletor
+  // marca o seletor e o título da página
   const sel = document.getElementById("campus-select");
   if (sel) sel.value = id;
+  const meta = CAMPUS.find(c => c.id === id);
+  document.title = `Cardápio RU · ${meta ? meta.name : "UnB"}`;
 
   state.data = null;
   state.stale = false;
@@ -217,15 +219,19 @@ async function selectCampus(id, { updateHash = true } = {}) {
     `<div class="unavailable"><span class="big">⏳</span> Carregando…</div>`;
 
   const { json, stale } = await loadCampus(id);
+  if (state.campus !== id) return; // o usuário trocou de campus enquanto carregava
+
   state.data = json;
   state.stale = stale;
 
   if (json && Object.keys(json.days).length) {
     const isos = Object.keys(json.days);
     const today = todayISO();
+    // sem dia atual/ futuro no cardápio, mostra o dia mais recente disponível
+    // (o banner de "semana anterior" sinaliza a situação)
     state.selectedDay = isos.includes(today)
       ? today
-      : isos.find(i => i >= today) || isos[0];
+      : isos.find(i => i >= today) || isos[isos.length - 1];
     const order = json.meals_order || MEAL_ORDER;
     if (!order.includes(state.selectedMeal)) state.selectedMeal = order.includes("almoco") ? "almoco" : order[0];
   }

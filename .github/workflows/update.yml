@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false   # não cancelar uma coleta de dados em andamento
 
 jobs:
   update-and-deploy:

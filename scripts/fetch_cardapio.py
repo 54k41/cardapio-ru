@@ -203,20 +203,25 @@ def parse_table_pdf(path):
             # Nos PDFs mais recentes o cabeçalho vem em DUAS linhas
             # (row0 = "2ª FEIRA", row1 = "24/8/2026") e a grade cria colunas
             # deslocadas: a data fica na coluna j, mas os VALORES caem em j-1.
-            # Mapeia cada data para a coluna de valor real: se a coluna da data
-            # estiver sempre vazia nas linhas de item e a anterior (j-1) tiver
-            # conteúdo, usa j-1.
+            # Decide UMA vez por página, olhando só as linhas cujo rótulo é
+            # conhecido (linhas estranhas não podem viciar a detecção):
+            # se a coluna da data está vazia em praticamente todas e a
+            # anterior preenchida, os valores estão deslocados para j-1.
+            label_rows = [row for row in table[header_idx + 1:]
+                          if len(row) > label_col
+                          and match_label(row[label_col] or "")]
+
             def value_col_for(j):
-                empty_at_j = all(
-                    not (row[j] if j < len(row) else "") or
-                    not str(row[j]).strip()
-                    for row in table[header_idx + 1:]
-                )
-                has_prev = all(
-                    j - 1 < len(row) and str(row[j - 1] or "").strip()
-                    for row in table[header_idx + 1:]
-                )
-                return j - 1 if (empty_at_j and j > 0 and has_prev) else j
+                n = len(label_rows)
+                if j == 0 or n < 3:
+                    return j
+                empty_at_j = sum(1 for row in label_rows
+                                 if not (j < len(row) and str(row[j] or "").strip()))
+                filled_prev = sum(1 for row in label_rows
+                                  if j - 1 < len(row) and str(row[j - 1] or "").strip())
+                if empty_at_j >= n - 1 and filled_prev >= n - 1:
+                    return j - 1
+                return j
 
             col_value = {j: value_col_for(j) for j in col_date}
 
@@ -388,8 +393,9 @@ def range_of(url):
 def pick_current(links, today=None):
     """Escolhe os PDFs cujo intervalo de datas cobre hoje.
 
-    Sem cobertura, usa o PDF de data inicial mais recente — por data inferida,
-    não por ordem alfabética (que ordena "Semana-10" antes de "Semana-9").
+    Sem cobertura (virada de semana / PDF atrasado), prefere a semana futura
+    mais próxima; se não houver, a mais recente já publicada — por data
+    inferida, não por ordem alfabética ("Semana-10" ordena antes de "Semana-9").
     """
     today = today or datetime.now(TZ_BSB).date()
 
@@ -402,6 +408,13 @@ def pick_current(links, today=None):
         return covering[:1]
     if not links:
         return []
+    futuras = sorted((u for u in links if range_of(u)[0] is not None
+                      and range_of(u)[1] >= today),
+                     key=lambda u: range_of(u)[0])
+    if futuras:
+        print(f"AVISO: nenhum PDF cobre {today}; "
+              f"usando a semana futura mais próxima ({futuras[0]})")
+        return futuras[:1]
     latest = max(links, key=lambda u: (range_of(u)[0] or date.min, u))
     print(f"AVISO: nenhum PDF cobre {today}; usando o mais recente ({latest})")
     return [latest]
@@ -515,7 +528,10 @@ def main():
 
     if failures:
         print("\nFalhou em:", failures)
-        sys.exit(1)
+        if not results:
+            sys.exit(1)  # nenhum campus teve sucesso; não há o que publicar
+        print("Seguindo com os campi que tiveram sucesso "
+              "(os que falharam mantêm o JSON anterior).")
 
 
 if __name__ == "__main__":
