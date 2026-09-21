@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-09-20T15:02:12-03:00",
+  "generated_at": "2026-09-21T12:30:44-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -65,7 +65,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Cubos de frango com manteiga de ervas"
+          "value": "Frango com manteiga de ervas"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
@@ -73,7 +73,7 @@
         },
         {
           "label": "Prato Principal Vegetariano Estrito",
-          "value": "Tomate recheado com quinoa"
+          "value": "Refogado de ervilha"
         },
         {
           "label": "Guarnição",
@@ -89,7 +89,7 @@
         },
         {
           "label": "Bebida (Refresco de)",
-          "value": "Jabuticaba"
+          "value": "Tangerina"
         }
       ],
       "jantar": [
@@ -135,7 +135,7 @@
         },
         {
           "label": "Bebida (Refresco de)",
-          "value": "Jabuticaba"
+          "value": "Tangerina"
         }
       ]
     },
