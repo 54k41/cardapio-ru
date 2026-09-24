@@ -1,7 +1,7 @@
 {
   "campus": "fcte",
   "campus_name": "Gama (FCTE)",
-  "generated_at": "2026-09-24T10:55:52-03:00",
+  "generated_at": "2026-09-24T13:23:25-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -66,6 +66,10 @@
         {
           "label": "Molho para Salada",
           "value": "Salsa"
+        },
+        {
+          "label": "Prato Principal Padrão",
+          "value": "Carne de sol trinchada com cebola roxa"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
