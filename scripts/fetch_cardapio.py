@@ -44,32 +44,32 @@ DATE_RE = re.compile(r"(\d{1,2})/(\d{1,2})/(\d{4})")
 CAMPUS = {
     "darcy": {
         "name": "Darcy Ribeiro",
-        "listing": f"{LISTING_BASE}/cardapio/",
+        "listings": [f"{LISTING_BASE}/cardapio/", f"{LISTING_BASE}/cardapio-refeitorio/"],
         "pattern": r"Darcy-Ribeiro",
     },
     "executivo": {
         "name": "Restaurante Executivo",
-        "listing": f"{LISTING_BASE}/restaurante-executivo/",
+        "listings": [f"{LISTING_BASE}/restaurante-executivo/"],
         "pattern": r"(?<![^/])SEMANA-",  # PDFs do executivo: SEMANA-04-17-08...
     },
     "fcts": {
         "name": "Ceilândia (FCTS)",
-        "listing": f"{LISTING_BASE}/cardapio-ceilandia/",
+        "listings": [f"{LISTING_BASE}/cardapio-ceilandia/", f"{LISTING_BASE}/cardapio-refeitorio/"],
         "pattern": r"Ceilandia",
     },
     "fcte": {
         "name": "Gama (FCTE)",
-        "listing": f"{LISTING_BASE}/cardapio-gama/",
+        "listings": [f"{LISTING_BASE}/cardapio-gama/", f"{LISTING_BASE}/cardapio-refeitorio/"],
         "pattern": r"Gama",
     },
     "fup": {
         "name": "Planaltina (FUP)",
-        "listing": f"{LISTING_BASE}/cardapio-planaltina/",
+        "listings": [f"{LISTING_BASE}/cardapio-planaltina/", f"{LISTING_BASE}/cardapio-refeitorio/"],
         "pattern": r"Planaltina",
     },
     "fal": {
         "name": "Fazenda Água Limpa (FAL)",
-        "listing": f"{LISTING_BASE}/cardapio-fazenda-agua-limpa/",
+        "listings": [f"{LISTING_BASE}/cardapio-fazenda-agua-limpa/", f"{LISTING_BASE}/cardapio-refeitorio/"],
         "pattern": r"Fazenda",
     },
 }
@@ -390,12 +390,20 @@ def parse_executivo_pdf(path):
 # ---------------------------------------------------------------------------
 # Descoberta/download
 # ---------------------------------------------------------------------------
-def discover_pdfs(listing_url, pattern):
-    req = Request(listing_url, headers={"User-Agent": UA})
-    html = urlopen(req, timeout=30).read().decode("utf-8", "replace")
-    links = sorted(set(re.findall(r'href="([^"]*\.pdf)"', html, re.I)))
-    links = [urljoin(listing_url, u.replace("http://", "https://")) for u in links]
-    return [u for u in links if re.search(pattern, u.split("/")[-1], re.I)]
+def discover_pdfs(listings, pattern):
+    """Agrega os PDFs de uma ou mais páginas de listagem (sem duplicar)."""
+    if isinstance(listings, str):
+        listings = [listings]
+    links, seen = [], set()
+    for listing_url in listings:
+        req = Request(listing_url, headers={"User-Agent": UA})
+        html = urlopen(req, timeout=30).read().decode("utf-8", "replace")
+        for u in re.findall(r'href="([^"]*\.pdf)"', html, re.I):
+            u = urljoin(listing_url, u.replace("http://", "https://"))
+            if u not in seen:
+                seen.add(u)
+                links.append(u)
+    return sorted(u for u in links if re.search(pattern, u.split("/")[-1], re.I))
 
 
 def range_of(url):
@@ -505,12 +513,12 @@ def download(url, dest):
 def process_campus(key, cfg, today=None):
     """Baixa o PDF vigente do campus e gera site/data/cardapio-<key>.json."""
     print(f"\n=== {key} ({cfg['name']}) ===")
-    print("Descobrindo PDFs em", cfg["listing"])
-    links = discover_pdfs(cfg["listing"], cfg["pattern"])
+    print("Descobrindo PDFs em", ", ".join(cfg["listings"]))
+    links = discover_pdfs(cfg["listings"], cfg["pattern"])
     print(f"{len(links)} PDF(s):", *("  " + l for l in links), sep="\n")
     chosen = pick_current(links, today=today)
     if not chosen:
-        raise RuntimeError(f"nenhum PDF encontrado em {cfg['listing']}")
+        raise RuntimeError(f"nenhum PDF encontrado em {cfg['listings']}")
     print("Usando:", chosen)
 
     sources, merged = [], {}
