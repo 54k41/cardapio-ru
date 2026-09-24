@@ -284,6 +284,15 @@ def parse_table_pdf(path):
 # ---------------------------------------------------------------------------
 EXEC_CATS = ["Saladas", "Pratos principais", "Guarnições",
              "Acompanhamentos", "Sobremesas"]
+# rótulo no singular para o site ("Salada 1", "Salada 2", ... como nos
+# PDFs tabelados); categorias sem entrada no mapa ficam como estão
+EXEC_SINGULAR = {
+    "Saladas": "Salada",
+    "Pratos principais": "Prato Principal",
+    "Guarnições": "Guarnição",
+    "Acompanhamentos": "Acompanhamento",
+    "Sobremesas": "Sobremesa",
+}
 EXEC_HEADER_TOP = 178   # palavras acima disso são cabeçalho/logo
 EXEC_LINE_TOL = 3.0     # tolerância para agrupar palavras na mesma linha
 EXEC_BLOCK_GAP = 12.0   # gap vertical (pt) que separa dois itens
@@ -361,6 +370,20 @@ def parse_executivo_pdf(path):
                     if len(text) < 2:
                         continue
                     out[isos[j]].append({"label": cat, "value": text})
+
+        # numera itens repetidos do mesmo dia ("Salada 1", "Salada 2", ...)
+        # e singulariza o rótulo; categoria com um item só fica no singular
+        for iso, items in out.items():
+            idxs_by_cat = {}
+            for i, it in enumerate(items):
+                idxs_by_cat.setdefault(it["label"], []).append(i)
+            for cat, idxs in idxs_by_cat.items():
+                singular = EXEC_SINGULAR.get(cat, cat)
+                if len(idxs) > 1:
+                    for n, i in enumerate(idxs, 1):
+                        items[i]["label"] = f"{singular} {n}"
+                else:
+                    items[idxs[0]]["label"] = singular
     return out
 
 
