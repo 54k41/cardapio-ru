@@ -8,6 +8,7 @@ const MEAL_NAMES = {
   jantar: "Jantar",
 };
 const HIGHLIGHT = ["Prato Principal Padrão"]; // itens com destaque visual
+const SHORT_NAMES = { cafe: "Café", almoco: "Almoço", jantar: "Jantar" };
 
 const DOW_LONG = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -164,11 +165,12 @@ function renderMealSwitch() {
     const active = meal === state.selectedMeal;
     btn.classList.toggle("active", active);
     btn.setAttribute("aria-selected", active);
-    // rótulo pode variar por campus (ex.: "Cardápio" no Executivo)
+    // rótulo pode variar por campus (ex.: "Cardápio" no Executivo); o curto
+    // nunca pode receber o nome completo — senão estoura o botão no mobile
     const label = names[meal] || meal;
     const long = btn.querySelector(".long"), short = btn.querySelector(".short");
     if (long) long.textContent = label;
-    if (short) short.textContent = label;
+    if (short) short.textContent = SHORT_NAMES[meal] || label;
   });
 }
 
