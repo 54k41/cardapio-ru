@@ -225,16 +225,51 @@ def parse_table_pdf(path):
 
             col_value = {j: value_col_for(j) for j in col_date}
 
-            for row in table[header_idx + 1:]:
+            # Região de colunas de cada data: da coluna de valor da data até
+            # antes da coluna de valor da data seguinte. Textos longos às
+            # vezes estouram para linhas de grade ABAIXO da linha do rótulo
+            # (e em colunas vizinhas dentro da própria data) — ex.: Gama,
+            # "Carne de sol trinchada com / cebola roxa" em duas linhas
+            # extra. Essas linhas são recuperadas pela varredura da região.
+            date_cols = sorted(col_date)
+            regions = {}
+            for i, j in enumerate(date_cols):
+                start = col_value[j]
+                end = (col_value[date_cols[i + 1]] - 1
+                       if i + 1 < len(date_cols) else None)
+                regions[j] = (start, end)
+
+            rows = table[header_idx + 1:]
+
+            def region_text(row_list, start, end):
+                parts = []
+                for r in row_list:
+                    for k in range(start, len(r) if end is None else min(end, len(r) - 1) + 1):
+                        v = re.sub(r"\s+", " ", r[k] or "").strip()
+                        if v:
+                            parts.append(v)
+                return " ".join(parts)
+
+            for idx, row in enumerate(rows):
                 cells = [c or "" for c in row]
                 if len(cells) <= label_col:
                     continue
                 label = match_label(cells[label_col])
                 if not label:
                     continue
+                # linhas seguintes sem rótulo podem conter a continuação
+                # do valor (stouro da célula) desta linha
+                nxt = next((k for k in range(idx + 1, len(rows))
+                            if len(rows[k]) > label_col
+                            and match_label(rows[k][label_col] or "")), None)
+                lookahead = rows[idx + 1:] if nxt is None else rows[idx + 1:nxt]
                 for j, iso in col_date.items():
                     vcol = col_value[j]
                     value = re.sub(r"\s*\n\s*", " ", cells[vcol]).strip() if vcol < len(cells) else ""
+                    if not value:
+                        start, end = regions[j]
+                        value = region_text([cells] + lookahead,
+                                            max(start, label_col + 1), end)
                     if not value:
                         continue
                     entries = days.setdefault(iso, {}).setdefault(page_meal, [])

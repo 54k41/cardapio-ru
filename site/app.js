@@ -143,17 +143,24 @@ function renderMenu() {
 }
 
 function renderMealSwitch() {
-  // ajusta as abas de refeição às refeições disponíveis no campus atual
+  // ajusta as abas de refeição às refeições DISPONÍVEIS no dia selecionado
+  // (ex.: FAL não tem jantar; FAL não tem café no sábado; FCTS não tem
+  // jantar no sábado) — sem dados no dia, a aba fica oculta
   const order = state.data.meals_order || MEAL_ORDER;
-  // seleção pode ser de outro campus (ex.: "principal" do Executivo);
+  const dayMenu = (state.data.days || {})[state.selectedDay] || {};
+  let available = order.filter(m => dayMenu[m] && dayMenu[m].length);
+  if (!available.length) available = order; // dia sem dados: mostra todas
+  // seleção pode ser de outro campus/dia (ex.: "principal" do Executivo);
   // prefere almoço, o padrão dos campi tabelados
-  if (!order.includes(state.selectedMeal)) state.selectedMeal = order.includes("almoco") ? "almoco" : order[0];
+  if (!available.includes(state.selectedMeal)) {
+    state.selectedMeal = available.includes("almoco") ? "almoco" : available[0];
+  }
   const names = Object.assign({}, MEAL_NAMES, state.data.meals_names || {});
   document.querySelectorAll(".meal-switch button").forEach(btn => {
     const meal = btn.dataset.meal;
-    const available = order.includes(meal);
-    btn.hidden = !available;
-    if (!available) return;
+    const shown = available.includes(meal);
+    btn.hidden = !shown;
+    if (!shown) return;
     const active = meal === state.selectedMeal;
     btn.classList.toggle("active", active);
     btn.setAttribute("aria-selected", active);

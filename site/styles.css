@@ -160,6 +160,12 @@ body {
   box-shadow: var(--shadow-sm);
   overflow-x: auto;
 }
+/* se as abas transbordarem, centraliza de forma "segura": o corte fica na
+   direita (rolável), nunca na esquerda — centro fixo corta dos dois lados
+   e o lado esquerdo fica inacessível */
+@supports (justify-content: safe center) {
+  .meal-switch { justify-content: safe center; }
+}
 .meal-switch button {
   flex: 1 1 0;
   min-width: 120px;
