@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-09-25T11:19:29-03:00",
+  "generated_at": "2026-09-25T16:09:03-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -571,7 +571,7 @@
         },
         {
           "label": "Sopa",
-          "value": "Sopa de tomate com aveia"
+          "value": "Creme de legumes"
         },
         {
           "label": "Torrada",
