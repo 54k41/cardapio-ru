@@ -1,7 +1,7 @@
 {
   "campus": "fcts",
   "campus_name": "Ceilândia (FCTS)",
-  "generated_at": "2026-09-27T15:55:32-03:00",
+  "generated_at": "2026-09-27T19:11:53-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -48,6 +48,40 @@
         {
           "label": "Fruta",
           "value": "Banana"
+        }
+      ],
+      "almoco": [
+        {
+          "label": "Salada 1",
+          "value": "Alface crespa"
+        },
+        {
+          "label": "Salada 2",
+          "value": "Picles de beterraba"
+        },
+        {
+          "label": "Molho para Salada",
+          "value": "Salsa"
+        },
+        {
+          "label": "Prato Principal Padrão",
+          "value": "Carne ao molho"
+        },
+        {
+          "label": "Prato Principal Vegetariano Estrito",
+          "value": "Silveirinha de soja"
+        },
+        {
+          "label": "Guarnição",
+          "value": "Macarrão temperado"
+        },
+        {
+          "label": "Sobremesa",
+          "value": "Maçã"
+        },
+        {
+          "label": "Bebida (Refresco de)",
+          "value": "Guaraná"
         }
       ],
       "jantar": [

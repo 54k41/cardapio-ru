@@ -11,6 +11,9 @@ on:
   schedule:
     - cron: "0 9 * * *"    # 06:00 Brasília
     - cron: "0 15 * * *"   # 12:00 Brasília
+    - cron: "0 23 * * 0"   # dom, 20:00 Brasília: virada para a semana nova
+                           # (o cardápio de domingo vale até 19h30, quando
+                           # fecha a entrada do RU)
   workflow_dispatch: {}     # execução manual
 
 permissions:

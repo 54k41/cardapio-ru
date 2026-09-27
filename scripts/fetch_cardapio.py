@@ -18,7 +18,7 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import date, datetime, timezone, timedelta
+from datetime import date, datetime, time as dtime, timezone, timedelta
 from pathlib import Path
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
@@ -155,8 +155,10 @@ def parse_table_pdf(path):
             if not table:
                 continue
 
-            # --- cabeçalho: linha com >= 4 datas
-            header_idx, col_date = None, {}
+            # --- cabeçalho: >= 4 datas, possivelmente quebradas em linhas
+            #     vizinhas (ex.: Darcy 28/9/2026 numa linha, ao lado de
+            #     "COMPOSIÇÃO", e 29/9–4/10 na linha seguinte)
+            header_idx, col_date, last_date_row = None, {}, None
             for i, row in enumerate(table):
                 mapping = {}
                 for j, cell in enumerate(row):
@@ -167,10 +169,18 @@ def parse_table_pdf(path):
                             mapping[j] = date(y, mo, d).isoformat()
                         except ValueError:
                             pass
-                if len(mapping) >= 4:
-                    header_idx, col_date = i, mapping
+                if not mapping:
+                    continue
+                if header_idx is None:
+                    header_idx, last_date_row = i, i
+                elif i - last_date_row > 2:
+                    break  # datas longe umas das outras: outro trecho da tabela
+                for j, iso in mapping.items():
+                    col_date.setdefault(j, iso)
+                last_date_row = i
+                if len(col_date) >= 4:
                     break
-            if header_idx is None:
+            if header_idx is None or len(col_date) < 4:
                 continue
 
             # --- coluna de rótulos: primeira coluna fora do mapa de datas
@@ -415,6 +425,14 @@ def range_of(url):
       datas com barras também são aceitas (24/8/2026)
     """
     name = url.split("/")[-1]
+    # Sufixo de duplicidade do WordPress ("...-a-04-10-2.pdf", arquivo
+    # reenviado): um número solto no fim, após a data de encerramento.
+    # Descarta-o quando o restante fecha um par dia-mês válido — assim não
+    # confunde com "18-19" (mês inválido, tratado adiante) nem com anos.
+    tail = re.split(r"-a-", name, maxsplit=1, flags=re.I)[-1]
+    nums = re.findall(r"\d+", tail)
+    if len(nums) == 3 and int(nums[1]) <= 12 and int(nums[2]) <= 31:
+        name = re.sub(r"-\d{1,2}\.pdf$", ".pdf", name, flags=re.I)
     # ano: procura /2026/ no caminho (padrão WordPress) ou 4 dígitos no nome
     year_match = re.search(r"/(20\d{2})/", url) or re.search(r"(20\d{2})", name)
     year = int(year_match.group(1)) if year_match else datetime.now(TZ_BSB).date().year
@@ -456,21 +474,24 @@ def range_of(url):
     return (min(ds), max(ds)) if ds else (None, None)
 
 
-def pick_current(links, today=None):
+def pick_current(links, today=None, now=None):
     """Escolhe o PDF cujo intervalo de datas cobre o dia de referência.
 
-    No domingo o alvo passa a ser a segunda-feira seguinte: o cardápio de
-    domingo já foi exibido a semana toda e, se a UnB já publicou o PDF da
-    semana seguinte (costuma sair antes do domingo), o site mostra a semana
-    nova desde cedo. Sem PDF da semana seguinte publicado, mantém o da
-    semana atual.
+    No domingo, o cardápio da semana atual (que inclui o próprio domingo)
+    continua valendo até 19h30 — horário em que fecha a entrada do RU para
+    o jantar. Depois disso o alvo passa a ser a segunda-feira seguinte: se
+    a UnB já publicou o PDF da semana nova (costuma sair antes do domingo),
+    ele entra no ar; caso contrário, mantém o da semana atual.
 
     Sem cobertura (virada de semana / PDF atrasado), prefere a semana futura
     mais próxima; se não houver, a mais recente já publicada — por data
     inferida, não por ordem alfabética ("Semana-10" ordena antes de "Semana-9").
     """
-    today = today or datetime.now(TZ_BSB).date()
-    alvo = today + timedelta(days=1) if today.weekday() == 6 else today
+    now = now or datetime.now(TZ_BSB)
+    today = today or now.date()
+    alvo = today
+    if today.weekday() == 6 and now.time() >= dtime(19, 30):
+        alvo = today + timedelta(days=1)
 
     def covers(u, d):
         r = range_of(u)
