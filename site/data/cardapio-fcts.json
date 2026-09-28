@@ -1,7 +1,7 @@
 {
   "campus": "fcts",
   "campus_name": "Ceilândia (FCTS)",
-  "generated_at": "2026-09-27T22:29:21-03:00",
+  "generated_at": "2026-09-28T14:12:31-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fcts-Ceilandia-Semana-02-28-09-a-04-10-2.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/09/Ceilandia-Semana-02-28-09-a-04-10-2.pdf"
+      "file": "fcts-Ceilandia-Semana-02-28-09-a-04-10.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/09/Ceilandia-Semana-02-28-09-a-04-10.pdf"
     }
   ],
   "days": {

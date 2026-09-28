@@ -1,7 +1,7 @@
 {
   "campus": "fup",
   "campus_name": "Planaltina (FUP)",
-  "generated_at": "2026-09-27T22:29:33-03:00",
+  "generated_at": "2026-09-28T14:12:46-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fup-Planaltina-Semana-02-28-09-a-04-10-1-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/09/Planaltina-Semana-02-28-09-a-04-10-1-1.pdf"
+      "file": "fup-Planaltina-Semana-02-28-09-a-04-10-.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/09/Planaltina-Semana-02-28-09-a-04-10-.pdf"
     }
   ],
   "days": {
