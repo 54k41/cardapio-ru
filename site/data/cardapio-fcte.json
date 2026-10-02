@@ -1,7 +1,7 @@
 {
   "campus": "fcte",
   "campus_name": "Gama (FCTE)",
-  "generated_at": "2026-10-01T17:10:44-03:00",
+  "generated_at": "2026-10-02T12:13:27-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -15,7 +15,7 @@
   "sources": [
     {
       "file": "fcte-Gama-Semana-02-28-09-a-04-10.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/09/Gama-Semana-02-28-09-a-04-10.pdf"
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Gama-Semana-02-28-09-a-04-10.pdf"
     }
   ],
   "days": {
@@ -489,7 +489,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Peixe ao molho bechamel gratinado"
+          "value": "Peixe ao molho de moqueca"
         },
         {
           "label": "Prato Principal Vegetariano Estrito",
