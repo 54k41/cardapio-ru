@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-08T17:32:06-03:00",
+  "generated_at": "2026-10-09T12:40:56-03:00",
   "meals_order": [
     "principal"
   ],
@@ -587,7 +587,7 @@
         },
         {
           "label": "Guarnição 3",
-          "value": "Coxinha de frango"
+          "value": "Batata frita"
         },
         {
           "label": "Guarnição 4",
