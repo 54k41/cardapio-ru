@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-13T17:31:34-03:00",
+  "generated_at": "2026-10-14T11:13:42-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-04-13-10-a-16-10.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-04-13-10-a-16-10.pdf"
+      "file": "executivo-SEMANA-04-13-10-a-16-10-1.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-04-13-10-a-16-10-1.pdf"
     }
   ],
   "days": {
@@ -195,7 +195,7 @@
         },
         {
           "label": "Prato Principal 1",
-          "value": "Cupim ao Alho"
+          "value": "Bife ao molho de alho"
         },
         {
           "label": "Prato Principal 2",
@@ -211,11 +211,11 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Escondidinho de lentilha gratinado"
+          "value": "Omelete de forno"
         },
         {
           "label": "Prato Principal 6",
-          "value": "Abobrinha recheada com lentilha ao sugo"
+          "value": "Abobrinha recheada com lentilha"
         },
         {
           "label": "Guarnição 1",
@@ -319,22 +319,30 @@
         },
         {
           "label": "Prato Principal 2",
-          "value": "Sobrecoxa recheada c/ Farofa de Calabresa"
+          "value": "Cupim ao alho"
         },
         {
           "label": "Prato Principal 3",
-          "value": "Costelinha suína ao molho barbecue"
+          "value": "Sobrecoxa recheada c/ Farofa"
         },
         {
           "label": "Prato Principal 4",
-          "value": "Frango grelhado"
+          "value": "de Calabresa"
         },
         {
           "label": "Prato Principal 5",
-          "value": "Suflê de chuchu"
+          "value": "Costelinha suína ao molho barbecue"
         },
         {
           "label": "Prato Principal 6",
+          "value": "Frango grelhado"
+        },
+        {
+          "label": "Prato Principal 7",
+          "value": "Suflê de chuchu"
+        },
+        {
+          "label": "Prato Principal 8",
           "value": "Berinjela recheada com quinoa"
         },
         {
