@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-10-13T17:31:29-03:00",
+  "generated_at": "2026-10-14T16:12:12-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-04-12-10-a-18-10.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-04-12-10-a-18-10.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-04-12-10-a-18-10-1-1.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-04-12-10-a-18-10-1-1.pdf"
     }
   ],
   "days": {
@@ -347,7 +347,7 @@
         },
         {
           "label": "Sopa",
-          "value": "Sopa canjiquinha"
+          "value": "Creme de cenoura"
         },
         {
           "label": "Torrada",
@@ -413,7 +413,7 @@
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
-          "value": "Suflê de chuchu"
+          "value": "Suflê de batata"
         },
         {
           "label": "Prato Principal Vegetariano Estrito",
@@ -451,7 +451,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Isca de carne ao molho escuro"
+          "value": "Carne ao molho escuro"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
@@ -463,7 +463,7 @@
         },
         {
           "label": "Sopa",
-          "value": "Creme de cebola caramelizada"
+          "value": "Creme de legumes"
         },
         {
           "label": "Torrada",
@@ -575,7 +575,7 @@
         },
         {
           "label": "Sopa",
-          "value": "Creme de legumes"
+          "value": "Creme de cebola caramelizada"
         },
         {
           "label": "Torrada",
