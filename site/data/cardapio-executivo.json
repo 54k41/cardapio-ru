@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-15T10:49:00-03:00",
+  "generated_at": "2026-10-15T15:54:33-03:00",
   "meals_order": [
     "principal"
   ],
@@ -79,11 +79,11 @@
         },
         {
           "label": "Prato Principal 3",
-          "value": "Suíno assado ao"
+          "value": "Suíno assado ao molho Mostarda e"
         },
         {
           "label": "Prato Principal 4",
-          "value": "molho Mostarda e Mel"
+          "value": "Mel"
         },
         {
           "label": "Prato Principal 5",
@@ -91,10 +91,14 @@
         },
         {
           "label": "Prato Principal 6",
-          "value": "Bolinho de milho gratinado"
+          "value": "Bolinho de milho"
         },
         {
           "label": "Prato Principal 7",
+          "value": "gratinado"
+        },
+        {
+          "label": "Prato Principal 8",
           "value": "Yakissoba"
         },
         {
@@ -143,26 +147,30 @@
         },
         {
           "label": "Sobremesa 2",
-          "value": "Flã com Calda de Morango"
+          "value": "Flã com Calda de"
         },
         {
           "label": "Sobremesa 3",
-          "value": "Pavê de chocolate"
+          "value": "Morango"
         },
         {
           "label": "Sobremesa 4",
-          "value": "e café com braliné de castanha"
+          "value": "Pavê de chocolate e café com braliné"
         },
         {
           "label": "Sobremesa 5",
-          "value": "Gelatina diet"
+          "value": "de castanha"
         },
         {
           "label": "Sobremesa 6",
-          "value": "Pudim de leite condensado"
+          "value": "Gelatina diet"
         },
         {
           "label": "Sobremesa 7",
+          "value": "Pudim de leite condensado"
+        },
+        {
+          "label": "Sobremesa 8",
           "value": "Salada de frutas"
         }
       ]
@@ -311,7 +319,11 @@
         },
         {
           "label": "Salada 7",
-          "value": "Molho de pimenta Molho vinagrete Molho de gengibre"
+          "value": "Molho de pimenta Molho vinagrete"
+        },
+        {
+          "label": "Salada 8",
+          "value": "Molho de gengibre"
         },
         {
           "label": "Prato Principal 1",
@@ -323,11 +335,11 @@
         },
         {
           "label": "Prato Principal 3",
-          "value": "Sobrecoxa recheada c/ Farofa"
+          "value": "Frango assado c/"
         },
         {
           "label": "Prato Principal 4",
-          "value": "de Calabresa"
+          "value": "manteiga de ervas"
         },
         {
           "label": "Prato Principal 5",
@@ -339,11 +351,11 @@
         },
         {
           "label": "Prato Principal 7",
-          "value": "Suflê de chuchu"
+          "value": "Suflê de batata"
         },
         {
           "label": "Prato Principal 8",
-          "value": "Berinjela recheada com quinoa"
+          "value": "Quinoacom legumes"
         },
         {
           "label": "Guarnição 1",
@@ -447,7 +459,7 @@
         },
         {
           "label": "Prato Principal 2",
-          "value": "Frango Assado c/ Manteiga de Ervas"
+          "value": "Sobrecoxa recheada c/ Farofa de Calabresa"
         },
         {
           "label": "Prato Principal 3",
@@ -455,14 +467,10 @@
         },
         {
           "label": "Prato Principal 4",
-          "value": "Frango grelhado Tomate recheado com homus de grão de bico"
+          "value": "Frango grelhado Tomate recheado com homus de grão de bico gratinado"
         },
         {
           "label": "Prato Principal 5",
-          "value": "gratinado"
-        },
-        {
-          "label": "Prato Principal 6",
           "value": "Refogado de ervilha"
         },
         {
