@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-10-14T16:12:12-03:00",
+  "generated_at": "2026-10-15T10:48:55-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-04-12-10-a-18-10-1-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-04-12-10-a-18-10-1-1.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-04-12-10-a-18-10.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-04-12-10-a-18-10.pdf"
     }
   ],
   "days": {
@@ -347,7 +347,7 @@
         },
         {
           "label": "Sopa",
-          "value": "Creme de cenoura"
+          "value": "Creme de batatas"
         },
         {
           "label": "Torrada",
