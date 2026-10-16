@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-15T15:54:33-03:00",
+  "generated_at": "2026-10-16T10:38:57-03:00",
   "meals_order": [
     "principal"
   ],
@@ -467,11 +467,15 @@
         },
         {
           "label": "Prato Principal 4",
-          "value": "Frango grelhado Tomate recheado com homus de grão de bico gratinado"
+          "value": "Frango grelhado"
         },
         {
           "label": "Prato Principal 5",
-          "value": "Refogado de ervilha"
+          "value": "Ovos assado ao sugo"
+        },
+        {
+          "label": "Prato Principal 6",
+          "value": "Refogado de grão de bico"
         },
         {
           "label": "Guarnição 1",
