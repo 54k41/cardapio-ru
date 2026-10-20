@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-10-20T10:59:42-03:00",
+  "generated_at": "2026-10-20T15:59:08-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-01-19-10-a-25-10-2.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-01-19-10-a-25-10-2.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-01-19-10-a-25-10-3.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-01-19-10-a-25-10-3.pdf"
     }
   ],
   "days": {
@@ -169,7 +169,7 @@
       "almoco": [
         {
           "label": "Salada 1",
-          "value": "Rúcula com queijo minas"
+          "value": "Mix de folhas com queijo minas"
         },
         {
           "label": "Salada 2",
