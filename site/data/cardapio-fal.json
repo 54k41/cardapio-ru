@@ -1,7 +1,7 @@
 {
   "campus": "fal",
   "campus_name": "Fazenda Água Limpa (FAL)",
-  "generated_at": "2026-10-19T17:24:44-03:00",
+  "generated_at": "2026-10-20T11:00:11-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fal-Fazenda-Semana-01-19-10-a-25-10-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Fazenda-Semana-01-19-10-a-25-10-1.pdf"
+      "file": "fal-Fazenda-Semana-01-19-10-a-25-10-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Fazenda-Semana-01-19-10-a-25-10-2.pdf"
     }
   ],
   "days": {
