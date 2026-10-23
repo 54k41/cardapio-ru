@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-23T10:58:22-03:00",
+  "generated_at": "2026-10-23T15:54:29-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,28 +10,28 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-01-19-10-a-23-10.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-01-19-10-a-23-10.pdf"
+      "file": "executivo-SEMANA-02-26-10-a-30-10.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-02-26-10-a-30-10.pdf"
     }
   ],
   "days": {
-    "2026-10-19": {
+    "2026-10-26": {
       "principal": [
         {
           "label": "Salada 1",
-          "value": "Alface crespa"
+          "value": "Alface lisa"
         },
         {
           "label": "Salada 2",
-          "value": "Repolho roxo com gergelim branco"
+          "value": "Repolho roxo com alface crespa e tomate confit"
         },
         {
           "label": "Salada 3",
-          "value": "Abobrinha ralada"
+          "value": "Chuchu cozido com pimentões coloridos"
         },
         {
           "label": "Salada 4",
-          "value": "Pétalas de Tomate e Brócolis com Ervas"
+          "value": "Salada de feijão fradinho (feijão fradinho com espinafre refogado, cenoura ralada, tomate e cebola picadinho)"
         },
         {
           "label": "Salada 5",
@@ -39,27 +39,23 @@
         },
         {
           "label": "Salada 6",
-          "value": "Tomate fatiado"
-        },
-        {
-          "label": "Salada 7",
-          "value": "Molho de pimenta Molho vinagrete Molho chipotle"
+          "value": "Tomate fatiado Molho vinagrete Molho de pimenta Molho de salsa"
         },
         {
           "label": "Prato Principal 1",
-          "value": "Rocambole"
+          "value": "Strogonoff de"
         },
         {
           "label": "Prato Principal 2",
-          "value": "Recheado"
+          "value": "carne"
         },
         {
           "label": "Prato Principal 3",
-          "value": "Filé de Frango o Molho de Mostarda"
+          "value": "Frango assado ao alecrim"
         },
         {
           "label": "Prato Principal 4",
-          "value": "Costelinha ao molho Barbecue"
+          "value": "Tilápiaà Belle Munière"
         },
         {
           "label": "Prato Principal 5",
@@ -67,35 +63,35 @@
         },
         {
           "label": "Prato Principal 6",
-          "value": "Quibe de legumes com"
+          "value": "Torta de grão de bico"
         },
         {
           "label": "Prato Principal 7",
-          "value": "quinoagratinado"
+          "value": "gratinada"
         },
         {
           "label": "Prato Principal 8",
-          "value": "Tomate recheado com quinoa"
+          "value": "Silverinha de soja"
         },
         {
           "label": "Guarnição 1",
-          "value": "Chuchu cozido"
+          "value": "Beterraba cozida"
         },
         {
           "label": "Guarnição 2",
-          "value": "Batonnetde cenoura"
+          "value": "Couve flor temperada"
         },
         {
           "label": "Guarnição 3",
-          "value": "Tempurá de legumes"
+          "value": "Batata frita"
         },
         {
           "label": "Guarnição 4",
-          "value": "Purê de Batata"
+          "value": "Espaguete ao molho pesto"
         },
         {
           "label": "Guarnição 5",
-          "value": "Farofa Acebolada"
+          "value": "Farofa de bacon"
         },
         {
           "label": "Acompanhamento 1",
@@ -119,399 +115,15 @@
         },
         {
           "label": "Sobremesa 1",
-          "value": "Melão"
-        },
-        {
-          "label": "Sobremesa 2",
-          "value": "Chiboustde Chocolate com coulismorango"
-        },
-        {
-          "label": "Sobremesa 3",
-          "value": "Delícia de abacaxi"
-        },
-        {
-          "label": "Sobremesa 4",
-          "value": "Gelatina diet"
-        },
-        {
-          "label": "Sobremesa 5",
-          "value": "Pudim de leite condensado"
-        },
-        {
-          "label": "Sobremesa 6",
-          "value": "Salada de frutas"
-        }
-      ]
-    },
-    "2026-10-20": {
-      "principal": [
-        {
-          "label": "Salada 1",
-          "value": "Alface lisa"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Acelga com chicória"
-        },
-        {
-          "label": "Salada 3",
-          "value": "Beterraba com"
-        },
-        {
-          "label": "Salada 4",
-          "value": "milho"
-        },
-        {
-          "label": "Salada 5",
-          "value": "Tabule"
-        },
-        {
-          "label": "Salada 6",
-          "value": "Salpicão de frango"
-        },
-        {
-          "label": "Salada 7",
-          "value": "Tomate fatiado"
-        },
-        {
-          "label": "Salada 8",
-          "value": "Molho de pimenta Molho vinagrete Pestode manjericão"
-        },
-        {
-          "label": "Prato Principal 1",
-          "value": "Fraldinha ao Molho"
-        },
-        {
-          "label": "Prato Principal 2",
-          "value": "Roti"
-        },
-        {
-          "label": "Prato Principal 3",
-          "value": "Filé à Pizzaiolo"
-        },
-        {
-          "label": "Prato Principal 4",
-          "value": "Peixe à Delicia"
-        },
-        {
-          "label": "Prato Principal 5",
-          "value": "Frango grelhado"
-        },
-        {
-          "label": "Prato Principal 6",
-          "value": "Rondele de espinafre"
-        },
-        {
-          "label": "Prato Principal 7",
-          "value": "com ricota e castanha"
-        },
-        {
-          "label": "Prato Principal 8",
-          "value": "Polpetone de ervilha"
-        },
-        {
-          "label": "Guarnição 1",
-          "value": "Couve flor c/"
-        },
-        {
-          "label": "Guarnição 2",
-          "value": "Brócolis refogado"
-        },
-        {
-          "label": "Guarnição 3",
-          "value": "Abóbora cozida com cebola e ervilha"
-        },
-        {
-          "label": "Guarnição 4",
-          "value": "Batata frita"
-        },
-        {
-          "label": "Guarnição 5",
-          "value": "Rondele misto"
-        },
-        {
-          "label": "Guarnição 6",
-          "value": "Farofa Rica"
-        },
-        {
-          "label": "Acompanhamento 1",
-          "value": "Arroz Piamontese"
-        },
-        {
-          "label": "Acompanhamento 2",
-          "value": "Arroz branco"
-        },
-        {
-          "label": "Acompanhamento 3",
-          "value": "Arroz integral"
-        },
-        {
-          "label": "Acompanhamento 4",
-          "value": "Feijão carioca"
-        },
-        {
-          "label": "Acompanhamento 5",
-          "value": "Feijão preto"
-        },
-        {
-          "label": "Sobremesa 1",
-          "value": "Abacaxi"
-        },
-        {
-          "label": "Sobremesa 2",
-          "value": "Pavê de BIS"
-        },
-        {
-          "label": "Sobremesa 3",
-          "value": "Banoffe"
-        },
-        {
-          "label": "Sobremesa 4",
-          "value": "Gelatina diet"
-        },
-        {
-          "label": "Sobremesa 5",
-          "value": "Pudim de Chocolate"
-        },
-        {
-          "label": "Sobremesa 6",
-          "value": "Salada de frutas"
-        }
-      ]
-    },
-    "2026-10-21": {
-      "principal": [
-        {
-          "label": "Salada 1",
-          "value": "Alface americana"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Agrião"
-        },
-        {
-          "label": "Salada 3",
-          "value": "Berinjela com"
-        },
-        {
-          "label": "Salada 4",
-          "value": "pimentões"
-        },
-        {
-          "label": "Salada 5",
-          "value": "Salada Ceaser"
-        },
-        {
-          "label": "Salada 6",
-          "value": "Salpicão de frango"
-        },
-        {
-          "label": "Salada 7",
-          "value": "Tomate fatiado"
-        },
-        {
-          "label": "Salada 8",
-          "value": "Molho de pimenta Molho vinagrete Molho de salsa"
-        },
-        {
-          "label": "Prato Principal 1",
-          "value": "Maminha ao Alho"
-        },
-        {
-          "label": "Prato Principal 2",
-          "value": "Frango à Cordon Bléu"
-        },
-        {
-          "label": "Prato Principal 3",
-          "value": "Lombo SuinoAo Molho de Laranja"
-        },
-        {
-          "label": "Prato Principal 4",
-          "value": "Frango grelhado"
-        },
-        {
-          "label": "Prato Principal 5",
-          "value": "Risoto de ervilha com queijo"
-        },
-        {
-          "label": "Prato Principal 6",
-          "value": "Refogado de ervilha, couve flor e vagem"
-        },
-        {
-          "label": "Guarnição 1",
-          "value": "Beterraba temperada com ervas finas"
-        },
-        {
-          "label": "Guarnição 2",
-          "value": "Abobrinha refogada"
-        },
-        {
-          "label": "Guarnição 3",
-          "value": "Mandioca frita"
-        },
-        {
-          "label": "Guarnição 4",
-          "value": "FettucineCacioe Pepe"
-        },
-        {
-          "label": "Guarnição 5",
-          "value": "Farofa de ovos"
-        },
-        {
-          "label": "Acompanhamento 1",
-          "value": "Arroz Colorido c/ Açafrão"
-        },
-        {
-          "label": "Acompanhamento 2",
-          "value": "Arroz branco"
-        },
-        {
-          "label": "Acompanhamento 3",
-          "value": "Arroz integral"
-        },
-        {
-          "label": "Acompanhamento 4",
-          "value": "Feijão carioca"
-        },
-        {
-          "label": "Acompanhamento 5",
-          "value": "Feijão preto"
-        },
-        {
-          "label": "Sobremesa 1",
-          "value": "Melancia"
-        },
-        {
-          "label": "Sobremesa 2",
-          "value": "Torta Prestigio"
-        },
-        {
-          "label": "Sobremesa 3",
-          "value": "Pavê de limão"
-        },
-        {
-          "label": "Sobremesa 4",
-          "value": "Gelatina diet"
-        },
-        {
-          "label": "Sobremesa 5",
-          "value": "Pudim de leite condensado"
-        },
-        {
-          "label": "Sobremesa 6",
-          "value": "Salada de frutas"
-        }
-      ]
-    },
-    "2026-10-22": {
-      "principal": [
-        {
-          "label": "Salada 1",
-          "value": "Alface mimosa"
-        },
-        {
-          "label": "Salada 2",
-          "value": "Alface lisa com rúcula"
-        },
-        {
-          "label": "Salada 3",
-          "value": "Picles de pepino"
-        },
-        {
-          "label": "Salada 4",
-          "value": "Salada Mexicana"
-        },
-        {
-          "label": "Salada 5",
-          "value": "(Abacate, Tomate Cereja, Milho ,Cebola Roxa, Salsinha) Salpicão de frango"
-        },
-        {
-          "label": "Salada 6",
-          "value": "Tomate fatiado"
-        },
-        {
-          "label": "Salada 7",
-          "value": "Molho de pimenta Molho vinagrete Molho de ervas finas"
-        },
-        {
-          "label": "Prato Principal 1",
-          "value": "Cupim Laqueado"
-        },
-        {
-          "label": "Prato Principal 2",
-          "value": "Coxa e Sobrecoxa Desossada na Manteiga de Ervas"
-        },
-        {
-          "label": "Prato Principal 3",
-          "value": "Filé de Peixe ao Molho de Castanha"
-        },
-        {
-          "label": "Prato Principal 4",
-          "value": "Frango grelhado"
-        },
-        {
-          "label": "Prato Principal 5",
-          "value": "Bife de soja ao sugogratinado"
-        },
-        {
-          "label": "Prato Principal 6",
-          "value": "Soja xadrez"
-        },
-        {
-          "label": "Guarnição 1",
-          "value": "Vagem com milho"
-        },
-        {
-          "label": "Guarnição 2",
-          "value": "Mix de repolho refogados"
-        },
-        {
-          "label": "Guarnição 3",
-          "value": "Dadinho de"
-        },
-        {
-          "label": "Guarnição 4",
-          "value": "Tapioca"
-        },
-        {
-          "label": "Guarnição 5",
-          "value": "Batata Canoa Assada"
-        },
-        {
-          "label": "Guarnição 6",
-          "value": "Farofa de banana frita"
-        },
-        {
-          "label": "Acompanhamento 1",
-          "value": "Arroz De Alho"
-        },
-        {
-          "label": "Acompanhamento 2",
-          "value": "Arroz branco"
-        },
-        {
-          "label": "Acompanhamento 3",
-          "value": "Arroz integral"
-        },
-        {
-          "label": "Acompanhamento 4",
-          "value": "Feijão carioca c/ Abóbora"
-        },
-        {
-          "label": "Acompanhamento 5",
-          "value": "Feijão preto"
-        },
-        {
-          "label": "Sobremesa 1",
           "value": "Mamão"
         },
         {
           "label": "Sobremesa 2",
-          "value": "Mousse de Chocolate c/ Ganachede Café e PralinéAmendoim"
+          "value": "Torta Ouro Branco"
         },
         {
           "label": "Sobremesa 3",
-          "value": "Flan de goiaba"
+          "value": "Surpresa de uva"
         },
         {
           "label": "Sobremesa 4",
@@ -519,7 +131,7 @@
         },
         {
           "label": "Sobremesa 5",
-          "value": "Pudim de Mandioca"
+          "value": "Pudim de leite condensado"
         },
         {
           "label": "Sobremesa 6",
@@ -527,99 +139,95 @@
         }
       ]
     },
-    "2026-10-23": {
+    "2026-10-27": {
       "principal": [
         {
           "label": "Salada 1",
-          "value": "Alface roxa"
+          "value": "Alface crespa"
         },
         {
           "label": "Salada 2",
-          "value": "Hakussai"
+          "value": "Acelga com couve"
         },
         {
           "label": "Salada 3",
-          "value": "Abóbora ralada"
+          "value": "Cenoura ralada com passas"
         },
         {
           "label": "Salada 4",
-          "value": "Salada colorida de quinoa"
+          "value": "Salada de quinoa (quinoa, tomate em cubos, pepino, azeitonas picadas, pimenta biquinho, cebolinha, temperada com limão) Salpicão de frango"
         },
         {
           "label": "Salada 5",
-          "value": "(repolho roxo em tiras finas, cenoura ralada, pepino em cubos pequenos))"
-        },
-        {
-          "label": "Salada 6",
-          "value": "Salpicão de frango Tomate fatiado"
-        },
-        {
-          "label": "Salada 7",
-          "value": "Molho de pimenta Molho vinagrete Molho mostarda de mel"
+          "value": "Tomate fatiado Molho vinagrete Molho de pimenta Molho de manjericão"
         },
         {
           "label": "Prato Principal 1",
-          "value": "Almôndegas"
+          "value": "Entrecôte Grelhado (contra filé)"
         },
         {
           "label": "Prato Principal 2",
-          "value": "Filé de Frango Empana"
+          "value": "Lasanha à Bolonhesa"
         },
         {
           "label": "Prato Principal 3",
-          "value": "TilápiaGrelhada"
+          "value": "Suíno ao molho Teriaki"
         },
         {
           "label": "Prato Principal 4",
-          "value": "Feijoada"
-        },
-        {
-          "label": "Prato Principal 5",
           "value": "Frango grelhado"
         },
         {
+          "label": "Prato Principal 5",
+          "value": "Croquete de soja"
+        },
+        {
           "label": "Prato Principal 6",
-          "value": "Omelete de vegetais com queijo e castanha"
+          "value": "com queijo"
         },
         {
           "label": "Prato Principal 7",
-          "value": "Feijoada vegetariana"
+          "value": "Grão de bico à indiana"
         },
         {
           "label": "Guarnição 1",
-          "value": "Berinjela com pimentões"
+          "value": "Jardineira verde"
         },
         {
           "label": "Guarnição 2",
-          "value": "Couve refogado"
+          "value": "Chuchu, abobrinha e brócolis"
         },
         {
           "label": "Guarnição 3",
-          "value": "Banana à Milanesa"
+          "value": "Milho cozido"
         },
         {
           "label": "Guarnição 4",
-          "value": "Macarrão ao alho e óleo"
+          "value": "Pastel de carne de sol"
         },
         {
           "label": "Guarnição 5",
-          "value": "Farofa de Soja Crocante"
+          "value": "Lasanha Napolitana"
+        },
+        {
+          "label": "Guarnição 6",
+          "value": "Farofa de alho poró"
         },
         {
           "label": "Acompanhamento 1",
-          "value": "Arroz À Grega"
+          "value": "Risoto de limão"
         },
         {
           "label": "Acompanhamento 2",
-          "value": "Arroz branco"
+          "value": "Siciliano"
         },
         {
           "label": "Acompanhamento 3",
-          "value": "Arroz integral c/"
+          "value": "Arroz branco"
         },
         {
           "label": "Acompanhamento 4",
-          "value": "Cenoura"
+          "value": "Arroz integral"
         },
         {
           "label": "Acompanhamento 5",
@@ -635,11 +243,163 @@
         },
         {
           "label": "Sobremesa 2",
-          "value": "Brownie"
+          "value": "Pavê de Sonho de"
         },
         {
           "label": "Sobremesa 3",
-          "value": "Cheescakede morango"
+          "value": "Valsa"
+        },
+        {
+          "label": "Sobremesa 4",
+          "value": "Delícia de morango"
+        },
+        {
+          "label": "Sobremesa 5",
+          "value": "Gelatina diet"
+        },
+        {
+          "label": "Sobremesa 6",
+          "value": "Pudim de leite condensado"
+        },
+        {
+          "label": "Sobremesa 7",
+          "value": "Salada de frutas"
+        }
+      ]
+    },
+    "2026-10-28": {
+      "principal": [
+        {
+          "label": "Salada",
+          "value": "FECHADO"
+        },
+        {
+          "label": "Prato Principal",
+          "value": "FECHADO"
+        },
+        {
+          "label": "Guarnição",
+          "value": "FECHADO"
+        },
+        {
+          "label": "Acompanhamento",
+          "value": "FECHADO"
+        },
+        {
+          "label": "Sobremesa",
+          "value": "FECHADO"
+        }
+      ]
+    },
+    "2026-10-29": {
+      "principal": [
+        {
+          "label": "Salada 1",
+          "value": "Alface roxa"
+        },
+        {
+          "label": "Salada 2",
+          "value": "Alface com chicória"
+        },
+        {
+          "label": "Salada 3",
+          "value": "Brócolis com couve flor Salada de feijão branco"
+        },
+        {
+          "label": "Salada 4",
+          "value": "Salada c/ Penne"
+        },
+        {
+          "label": "Salada 5",
+          "value": "(maionese,penne, ervlha,maça, manjericão. Tomate fatiado"
+        },
+        {
+          "label": "Salada 6",
+          "value": "Molho vinagrete Molho de pimenta Molho ácido"
+        },
+        {
+          "label": "Prato Principal 1",
+          "value": "Escondidinho de Mandioquinha com Costela Bovina"
+        },
+        {
+          "label": "Prato Principal 2",
+          "value": "Frango com quiabo"
+        },
+        {
+          "label": "Prato Principal 3",
+          "value": "Picanha Suína"
+        },
+        {
+          "label": "Prato Principal 4",
+          "value": "Grelhada"
+        },
+        {
+          "label": "Prato Principal 5",
+          "value": "Frango grelhado"
+        },
+        {
+          "label": "Prato Principal 6",
+          "value": "Bolinho de lentilha gratinado"
+        },
+        {
+          "label": "Prato Principal 7",
+          "value": "Charuto de repolho com PTS"
+        },
+        {
+          "label": "Guarnição 1",
+          "value": "Seleta de legumes Cenoura, batata e ervilha, cubinho pequenos Chuchu refogado com ervas"
+        },
+        {
+          "label": "Guarnição 2",
+          "value": "Bolinho de"
+        },
+        {
+          "label": "Guarnição 3",
+          "value": "mandioca e queijo"
+        },
+        {
+          "label": "Guarnição 4",
+          "value": "Capelettide Carne à Puttanesca"
+        },
+        {
+          "label": "Guarnição 5",
+          "value": "Farofa agridoce"
+        },
+        {
+          "label": "Guarnição 6",
+          "value": "(azeitona, maçã e uva passas)"
+        },
+        {
+          "label": "Acompanhamento 1",
+          "value": "Arroz com castanha"
+        },
+        {
+          "label": "Acompanhamento 2",
+          "value": "Arroz branco"
+        },
+        {
+          "label": "Acompanhamento 3",
+          "value": "Arroz integral"
+        },
+        {
+          "label": "Acompanhamento 4",
+          "value": "Feijão Tropeiro"
+        },
+        {
+          "label": "Acompanhamento 5",
+          "value": "Feijão preto"
+        },
+        {
+          "label": "Sobremesa 1",
+          "value": "Melancia"
+        },
+        {
+          "label": "Sobremesa 2",
+          "value": "Brigadeiro"
+        },
+        {
+          "label": "Sobremesa 3",
+          "value": "Torta de Oreo"
         },
         {
           "label": "Sobremesa 4",
@@ -647,7 +407,119 @@
         },
         {
           "label": "Sobremesa 5",
-          "value": "Pudim de Leite Condensado"
+          "value": "Pudim de Tapioca"
+        },
+        {
+          "label": "Sobremesa 6",
+          "value": "Salada de frutas"
+        }
+      ]
+    },
+    "2026-10-30": {
+      "principal": [
+        {
+          "label": "Salada 1",
+          "value": "Alface americana"
+        },
+        {
+          "label": "Salada 2",
+          "value": "Alface roxa com rúcula"
+        },
+        {
+          "label": "Salada 3",
+          "value": "Picles de cebola roxa"
+        },
+        {
+          "label": "Salada 4",
+          "value": "Salada de lentilha (lentilha, pimentão amarelo, tomate cereja, cebola picada, salsinha) Salpicão de frango Tomate fatiado Molho vinagrete Molho de pimenta Molho de hortelã"
+        },
+        {
+          "label": "Prato Principal 1",
+          "value": "Bife à Parmegiana"
+        },
+        {
+          "label": "Prato Principal 2",
+          "value": "Frango ao molho Supremo"
+        },
+        {
+          "label": "Prato Principal 3",
+          "value": "Peixada cearense"
+        },
+        {
+          "label": "Prato Principal 4",
+          "value": "Frango grelhado"
+        },
+        {
+          "label": "Prato Principal 5",
+          "value": "Isca de soja ao sugo gratinada"
+        },
+        {
+          "label": "Prato Principal 6",
+          "value": "Guisado de grãos de soja"
+        },
+        {
+          "label": "Guarnição 1",
+          "value": "Beterraba"
+        },
+        {
+          "label": "Guarnição 2",
+          "value": "Vagem com milho"
+        },
+        {
+          "label": "Guarnição 3",
+          "value": "Bolinha de"
+        },
+        {
+          "label": "Guarnição 4",
+          "value": "Moqueca"
+        },
+        {
+          "label": "Guarnição 5",
+          "value": "Nhoque ao molho Sugo"
+        },
+        {
+          "label": "Guarnição 6",
+          "value": "Paçoca Salgada"
+        },
+        {
+          "label": "Acompanhamento 1",
+          "value": "Arroz de Tomate"
+        },
+        {
+          "label": "Acompanhamento 2",
+          "value": "Arroz branco"
+        },
+        {
+          "label": "Acompanhamento 3",
+          "value": "Arroz integral"
+        },
+        {
+          "label": "Acompanhamento 4",
+          "value": "Feijão carioca"
+        },
+        {
+          "label": "Acompanhamento 5",
+          "value": "Feijão preto"
+        },
+        {
+          "label": "Sobremesa 1",
+          "value": "Melão"
+        },
+        {
+          "label": "Sobremesa 2",
+          "value": "Bolo Gelado de Abacaxi com Coco"
+        },
+        {
+          "label": "Sobremesa 3",
+          "value": "Mousse de Ovo Maltinec/ Chantininho"
+        },
+        {
+          "label": "Sobremesa 4",
+          "value": "Gelatina diet"
+        },
+        {
+          "label": "Sobremesa 5",
+          "value": "Pudim de leite condensado"
         },
         {
           "label": "Sobremesa 6",
