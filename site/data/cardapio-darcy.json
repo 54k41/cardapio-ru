@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-10-25T22:03:25-03:00",
+  "generated_at": "2026-10-26T12:39:32-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-02-26-10-a-01-11-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-02-26-10-a-01-11-1.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf"
     }
   ],
   "days": {
@@ -39,7 +39,7 @@
         },
         {
           "label": "Complemento Ovolactovegetariano",
-          "value": "Queijo muçarela"
+          "value": "Queijo minas"
         },
         {
           "label": "Complemento Vegetariano Estrito",
@@ -103,7 +103,7 @@
         },
         {
           "label": "Molho para Salada",
-          "value": "Mostarda e mel"
+          "value": "Mostarda e mel /Limão"
         },
         {
           "label": "Prato Principal Padrão",
@@ -155,7 +155,7 @@
         },
         {
           "label": "Complemento Ovolactovegetariano",
-          "value": "Queijo minas"
+          "value": "Queijo muçarela"
         },
         {
           "label": "Complemento Vegetariano Estrito",

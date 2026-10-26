@@ -1,7 +1,7 @@
 {
   "campus": "fup",
   "campus_name": "Planaltina (FUP)",
-  "generated_at": "2026-10-25T22:03:47-03:00",
+  "generated_at": "2026-10-26T12:39:53-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fup-Planaltina-Semana-02-26-10-a-01-11.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Planaltina-Semana-02-26-10-a-01-11.pdf"
+      "file": "fup-Planaltina-Semana-02-26-10-a-01-11-1.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Planaltina-Semana-02-26-10-a-01-11-1.pdf"
     }
   ],
   "days": {
@@ -103,7 +103,7 @@
         },
         {
           "label": "Molho para Salada",
-          "value": "Mostarda e mel"
+          "value": "Mostarda e mel /Limão"
         },
         {
           "label": "Prato Principal Padrão",
