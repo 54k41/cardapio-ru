@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-10-28T17:06:45-03:00",
+  "generated_at": "2026-10-29T12:44:43-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-02-26-10-a-01-11-2.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-02-26-10-a-01-11-4.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Darcy-Ribeiro-Semana-02-26-10-a-01-11-4.pdf"
     }
   ],
   "days": {
@@ -435,7 +435,7 @@
       "jantar": [
         {
           "label": "Salada 1",
-          "value": "Repolho branco e passas"
+          "value": "Mix de folhas"
         },
         {
           "label": "Salada 2",
@@ -451,7 +451,7 @@
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
-          "value": "Macarrão ao molho branco com PTS"
+          "value": "Macarrão ao molho branco com lentilha"
         },
         {
           "label": "Prato Principal Vegetariano Estrito",
@@ -663,7 +663,7 @@
       "jantar": [
         {
           "label": "Salada 1",
-          "value": "Mix de folhas"
+          "value": "Repolho branco com passas"
         },
         {
           "label": "Salada 2",
