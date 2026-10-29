@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-10-29T12:44:47-03:00",
+  "generated_at": "2026-10-29T17:05:30-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-02-26-10-a-30-10-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-02-26-10-a-30-10-1.pdf"
+      "file": "executivo-SEMANA-02-26-10-a-30-10-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/10/SEMANA-02-26-10-a-30-10-2.pdf"
     }
   ],
   "days": {
@@ -511,7 +511,7 @@
         },
         {
           "label": "Sobremesa 5",
-          "value": "Pudim de Tapioca"
+          "value": "Sagu caramelizado"
         },
         {
           "label": "Sobremesa 6",
