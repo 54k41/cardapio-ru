@@ -1,7 +1,7 @@
 {
   "campus": "fcts",
   "campus_name": "Ceilândia (FCTS)",
-  "generated_at": "2026-11-03T17:48:30-03:00",
+  "generated_at": "2026-11-04T13:41:57-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fcts-Ceilandia-Semana-03-02-11-a-08-11-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/10/Ceilandia-Semana-03-02-11-a-08-11-1.pdf"
+      "file": "fcts-Ceilandia-Semana-03-02-11-a-08-11.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Ceilandia-Semana-03-02-11-a-08-11.pdf"
     }
   ],
   "days": {
@@ -343,7 +343,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Filé de peixe ao molho de ervas"
+          "value": "Hambúrguer gratinado"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
@@ -459,7 +459,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Isca de frango ao molho branco"
+          "value": "Filé de peixe ao molho de ervas"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
@@ -579,7 +579,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Hambúrguer gratinado"
+          "value": "Isca de frango ao molho branco"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
