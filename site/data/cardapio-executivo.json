@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-11-08T23:29:50-03:00",
+  "generated_at": "2026-11-09T16:22:18-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-04-09-11-a-13-11.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-04-09-11-a-13-11.pdf"
+      "file": "executivo-SEMANA-04-09-11-a-13-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-04-09-11-a-13-11-2.pdf"
     }
   ],
   "days": {
@@ -67,7 +67,7 @@
         },
         {
           "label": "Prato Principal 6",
-          "value": "Torta de legumes e"
+          "value": "Berinjela recheada com"
         },
         {
           "label": "Prato Principal 7",
@@ -203,7 +203,7 @@
         },
         {
           "label": "Prato Principal 7",
-          "value": "gratinado"
+          "value": "com soja gratinado"
         },
         {
           "label": "Prato Principal 8",
@@ -327,7 +327,7 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Escondidinho de lentilha gratinado"
+          "value": "Omelete de forno com manjericão e queijo gratinada"
         },
         {
           "label": "Prato Principal 6",
@@ -451,11 +451,11 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Suflê de chuchu"
+          "value": "Suflê de batata"
         },
         {
           "label": "Prato Principal 6",
-          "value": "Berinjela recheada com quinoa"
+          "value": "Quinoacom legumes refogados"
         },
         {
           "label": "Guarnição 1",
@@ -571,11 +571,15 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Frango grelhado Tomate recheado com homus de grão de bico gratinado"
+          "value": "Frango grelhado"
         },
         {
           "label": "Prato Principal 6",
-          "value": "Refogado de ervilha"
+          "value": "Ovos assados ao sugo"
+        },
+        {
+          "label": "Prato Principal 7",
+          "value": "Refogado de grão de bico"
         },
         {
           "label": "Guarnição 1",

@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-11-08T23:29:45-03:00",
+  "generated_at": "2026-11-09T16:22:13-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-04-09-11-a-15-11-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Darcy-Ribeiro-Semana-04-09-11-a-15-11-1.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-04-09-11-a-15-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Darcy-Ribeiro-Semana-04-09-11-a-15-11-2.pdf"
     }
   ],
   "days": {
@@ -173,7 +173,7 @@
         },
         {
           "label": "Salada 2",
-          "value": "Tomate"
+          "value": "Cenoura ralada"
         },
         {
           "label": "Molho para Salada",
