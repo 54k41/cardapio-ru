@@ -1,0 +1,5 @@
+# Dependência do extrator (scripts/fetch_cardapio.py).
+# Versão fixa: o agrupamento das linhas do Executivo depende do comportamento
+# do pdfplumber com x_tolerance e bboxes de células mescladas — um upgrade
+# silencioso pode partir pratos em dois itens.
+pdfplumber==0.11.10

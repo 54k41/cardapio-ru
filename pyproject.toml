@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cardapio-ru"
+version = "1.0.0"
+description = "Cardápio semanal do Restaurante Universitário da UnB (raspagem dos PDFs oficiais + site estático)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+# O script roda solto (`python scripts/fetch_cardapio.py`), não como pacote:
+# a lista abaixo existe para versionar as dependências junto do código.
+dependencies = [
+    "pdfplumber==0.11.10",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts"]
+addopts = "-q"
+
+[tool.setuptools]
+py-modules = []

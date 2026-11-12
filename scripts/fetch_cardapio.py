@@ -301,8 +301,16 @@ def parse_table_pdf(path):
 
             day_left = {j: col_left_edge(col_value[j]) for j in col_date}
 
-            def clean(c):
-                return re.sub(r"\s+", " ", c or "").strip()
+            def cell_text(c):
+                """Texto de uma célula com as quebras de linha resolvidas.
+
+                `_join_lines` roda ANTES de `_tidy`: o `_tidy` colapsa todo
+                espaço (inclusive "\\n") e apagaria a quebra de linha que
+                distingue continuação de item listado. Sem isso, "Arroz
+                branco e integral\\nFeijão carioca" saía "integral Feijão
+                carioca".
+                """
+                return _tidy(_join_lines(c or ""))
 
             def cell_at(cells, k):
                 return cells[k] if 0 <= k < len(cells) else None
@@ -334,13 +342,27 @@ def parse_table_pdf(path):
                 return None
 
             def region_text(row_list, start, end):
-                parts = []
+                """Texto da região de colunas do dia, com as quebras resolvidas.
+
+                Cada célula da varredura é um pedaço do valor; a mesma regra de
+                `_join_lines` decide se o pedaço seguinte continua a frase
+                (espaço) ou abre outro item (" / ").
+                """
+                out = ""
                 for r in row_list:
                     for k in range(start, len(r) if end is None else min(end, len(r) - 1) + 1):
-                        v = clean(r[k] if k < len(r) else None)
-                        if v:
-                            parts.append(v)
-                return " ".join(parts)
+                        v = cell_text(r[k] if k < len(r) else None)
+                        if not v:
+                            continue
+                        if not out:
+                            out = v
+                        elif out.endswith("-") and not out.endswith("--"):
+                            out += v            # hifenização na quebra
+                        elif _continues_text(out, v):
+                            out += " " + v
+                        else:
+                            out += " / " + v
+                return out
 
             for idx, row in enumerate(rows):
                 cells = list(row)  # preserva None: marca células mescladas
@@ -364,7 +386,7 @@ def parse_table_pdf(path):
                     bboxes = tb_rows[idx] if idx < len(tb_rows) else []
                     raw = merged_cell(cells, bboxes, vcol, j)
                     was_merged = cell_at(cells, vcol) is None
-                    value = clean(raw) if raw is not None else ""
+                    value = cell_text(raw) if raw is not None else ""
                     if not value:
                         # estouro do texto para linhas abaixo, dentro da
                         # região da própria data
@@ -377,15 +399,16 @@ def parse_table_pdf(path):
                     cont = ""
                     for k2 in look:
                         if was_merged:
-                            t = clean(merged_cell(list(rows[k2]),
-                                                  tb_rows[k2] if k2 < len(tb_rows) else [],
-                                                  vcol, j))
+                            t = cell_text(merged_cell(list(rows[k2]),
+                                                      tb_rows[k2] if k2 < len(tb_rows) else [],
+                                                      vcol, j))
                         else:
                             t = region_text([rows[k2]], lo, end)
                         if t:
                             cont = f"{cont} {t}".strip()
                     if cont:
                         value = f"{value} / {cont}" if value else cont
+                    value = _trim_trailing_connector(value)
                     if not value:
                         continue
                     entries = days.setdefault(iso, {}).setdefault(page_meal, [])
@@ -414,10 +437,13 @@ EXEC_HEADER_TOP = 178   # palavras acima disso são cabeçalho/logo
 EXEC_LINE_TOL = 3.0     # tolerância para agrupar palavras na mesma linha
 EXEC_BLOCK_GAP = 4.5    # vão livre (pt) que, quando folgado, separa itens
 EXEC_LINE_PITCH = 12.05 # pitch topo-a-topo dentro de UM mesmo item (grade)
+EXEC_PITCH_TOL = 0.08   # tolerância para considerar o pitch igual à entrelinha
+                        # medida na coluna (_block_leading)
 EXEC_X_TOL = 2.0        # distância máx. (pt) entre letras da mesma palavra.
                         # O default do pdfplumber (3) cola palavras quando o
                         # texto vem em dois pedaços com pouco espaço entre
                         # eles ("quinoagratinado", "Semifredode", "Batonnetde")
+EXEC_HOLIDAY = "FERIADO"  # célula que marca feriado no Executivo
 
 # palavras/pontuação que fecham uma linha mas NÃO fecham o texto do item
 EXEC_CONNECTORS = {"de", "da", "do", "das", "dos", "e", "ou", "com", "sem",
@@ -429,24 +455,23 @@ EXEC_TRAIL = "/,(-:;&"
 def _cont_start(text):
     """True se a linha começa como continuação de texto: inicial
     minúscula, parêntese ou aspas (descrições de prato, quebras de frase)."""
-    for ch in text:
-        if ch.isspace():
-            continue
-        if ch.isalpha():
-            return ch.islower()
-        return ch in "(\"'"
-    return False
+    return _starts_lower(text)
 
 
 def _unfinished(text):
     """True se a linha termina no meio do item: palavra de ligação no fim
-    ("... legumes com", "Ganache de Café e") ou pontuação aberta ("/", "c/")."""
+    ("... legumes com", "Ganache de Café e"), pontuação aberta ("/", "c/") ou
+    letra solta — resto de um conector que o PDF perdeu ("Filé de Frango o",
+    onde o "a" de "ao" não está no texto do PDF)."""
     t = (text or "").rstrip()
     if not t:
         return True
     if t[-1] in EXEC_TRAIL:
         return True
-    return t.split()[-1].lower().strip(".,;:") in EXEC_CONNECTORS
+    last = t.split()[-1].lower().strip(".,;:")
+    if len(last) == 1 and last.isalpha():
+        return True
+    return last in EXEC_CONNECTORS
 
 
 def _tidy(text):
@@ -458,35 +483,188 @@ def _tidy(text):
     return re.sub(r"\s+", " ", t).strip()
 
 
+# ---------------------------------------------------------------------------
+# Junção de linhas e limpeza de valores (comum aos dois formatos)
+# ---------------------------------------------------------------------------
+# Palavras que, no fim de um valor, são lixo: ou porque o PDF quebrou a frase
+# na quebra de linha e nada veio depois, ou porque a célula termina num
+# conector ("Pão francês ou Pão careca ou"). Nenhuma linha de cardápio
+# termina de verdade nessas palavras.
+TRAIL_CONNECTORS = {
+    "ou", "e", "de", "da", "do", "das", "dos", "com", "sem", "ao", "aos",
+    "à", "às", "em", "no", "na", "nos", "nas", "para", "por", "a", "o",
+    "as", "os",
+}
+# conectores que ligam a linha seguinte à anterior (a quebra não é separador)
+JOIN_CONNECTORS = TRAIL_CONNECTORS - {"a", "o", "as", "os"}
+
+
+def _trim_trailing_connector(text):
+    """Remove conector(es) pendurado(s) no fim do valor.
+
+    "Pão francês ou Pão careca ou" -> "Pão francês ou Pão careca". Roda até
+    estabilizar porque o prompt de extração pode deixar mais de um
+    ("Creme de" -> "Creme"); o valor nunca fica vazio.
+    """
+    t = (text or "").strip()
+    while True:
+        parts = t.split()
+        if len(parts) < 3:
+            return t
+        if parts[-1].lower().strip(".,;:") not in TRAIL_CONNECTORS:
+            return t
+        t = " ".join(parts[:-1]).rstrip(" ,;:-/")
+
+
+def _starts_lower(text):
+    """Primeira letra (ou parêntese/aspas) é minúscula."""
+    for ch in text:
+        if ch.isspace():
+            continue
+        if ch.isalpha():
+            return ch.islower()
+        return ch in "(\"'"
+    return False
+
+
+def _join_lines(lines):
+    """Junta as linhas visuais de uma célula do PDF.
+
+    A quebra de linha de uma célula pode significar duas coisas opostas:
+      - a frase continua ("Carne ao molho de" / "vinho") -> espaço;
+      - a célula lista itens distintos em linhas separadas ("Arroz branco e
+        integral" / "Feijão carioca") -> " / ", senão o valor sai colado e
+        se lê "integral Feijão carioca".
+    O sinal usado é o mesmo do português: linha seguinte em minúscula,
+    anterior terminando em conector/pontuação aberta, ou palavra hifenizada
+    na quebra ("couve-" / "flor") => continuação.
+    """
+    parts = [re.sub(r"[ \t]+", " ", ln).strip()
+             for ln in re.split(r"\r?\n", lines or "")]
+    parts = [p for p in parts if p]
+    if not parts:
+        return ""
+    out = parts[0]
+    for nxt in parts[1:]:
+        if out.endswith("-") and not out.endswith("--"):
+            out += nxt                       # hifenização na quebra
+        elif _continues_text(out, nxt):
+            out += " " + nxt
+        else:
+            out += " / " + nxt
+    return re.sub(r"\s+", " ", out).strip()
+
+
+def _continues_text(prev, nxt):
+    """True se `nxt` completa `prev` (em vez de ser um item novo)."""
+    t = prev.rstrip()
+    if not t:
+        return True
+    if t[-1] in "/,(-:;":
+        return True
+    if _starts_lower(nxt):
+        return True
+    last = t.split()[-1].lower().strip(".,;:")
+    return last in JOIN_CONNECTORS
+
+
+def _baseline_of(chars, top):
+    """Linha de base (y da matriz do texto) da linha visual que começa em `top`.
+
+    Todos os glifos de uma linha compartilham a mesma linha de base; usar a
+    moda na faixa de `top` sobrevive a acentos, descendentes e a um glifo
+    vizinho ocasional.
+    """
+    counts = {}
+    for c in chars:
+        if abs(c["top"] - top) > EXEC_LINE_TOL:
+            continue
+        b = round(c["matrix"][5], 2)
+        counts[b] = counts.get(b, 0) + 1
+    if not counts:
+        return None
+    return max(counts.items(), key=lambda kv: kv[1])[0]
+
+
+def _pitch(a, b):
+    """Passo vertical entre duas linhas, medido linha de base a linha de base.
+
+    O `top` do pdfplumber é a borda do bbox dos glifos: um acento ("Salpicão")
+    sobe essa borda ~0.2-0.3 pt e um descendente ("gratinado") a desce, então
+    pitch por `top` erra por frações justamente onde o valor é crítico. A
+    matriz do texto dá a linha de base exata.
+    """
+    if a.get("base") is not None and b.get("base") is not None:
+        return a["base"] - b["base"]
+    return b["top"] - a["top"]
+
+
+def _block_leading(lines):
+    """Descobre o passo vertical usado DENTRO de um item nesta coluna.
+
+    Cada coluna é digitada à mão: dentro de um item as linhas saem com
+    entrelinha constante (12 pt nestes PDFs), enquanto um item novo ganha um
+    "respiro" — mas o respiro às vezes é NEGATIVO (10.1 pt) e às vezes é
+    exatamente a entrelinha. Por isso o passo é medido na própria coluna
+    (valor mais frequente entre linhas de mesmo tamanho) em vez de fixado.
+    """
+    counts = {}
+    for a, b in zip(lines, lines[1:]):
+        if abs(a["size"] - b["size"]) > 0.5:
+            continue                      # troca de tamanho: outra regra decide
+        p = _pitch(a, b)
+        if 8.0 <= p <= 16.0:
+            counts[round(p, 2)] = counts.get(round(p, 2), 0) + 1
+    if not counts:
+        return EXEC_LINE_PITCH
+    return max(counts.items(),
+               key=lambda kv: (kv[1], -abs(kv[0] - EXEC_LINE_PITCH)))[0]
+
+
+def _first_word(text):
+    parts = (text or "").split()
+    return parts[0].lower().strip(".,;:()") if parts else ""
+
+
 def _group_exec_blocks(lines):
     """Agrupa as linhas visuais de uma coluna de data em blocos (itens).
 
     O espaçamento do PDF é manual: o vão livre entre duas linhas do MESMO
-    item vai de ~-0.5 a ~3.4 pt, e entre itens distintos pode até ser
-    negativo — nenhum limiar geométrico único separa os dois casos. Combina:
+    item vai de ~-0.5 a ~3.4 pt, e entre itens distintos pode ser menor que
+    o de dentro de um item — nenhum limiar geométrico único separa os dois
+    casos. Combina:
       - tamanho de fonte: linha de descrição (6/8pt) pertence ao item de
         cima; fim da descrição (6/8pt -> 10pt) abre item novo;
-      - vão livre > EXEC_BLOCK_GAP ou pitch > EXEC_LINE_PITCH: item novo;
+      - vão livre > EXEC_BLOCK_GAP ou pitch > entrelinha da coluna: item novo;
       - linha começando em minúscula/'(': continuação;
-      - linha anterior terminando em palavra de ligação ou pontuação aberta
-        ("... legumes com", "Chocolate c/"): continuação;
+      - linha anterior terminando em palavra de ligação, pontuação aberta ou
+        letra solta ("... legumes com", "Chocolate c/", "Filé de Frango o"):
+        continuação;
       - linha de uma só palavra ("Gratinado", "Cajá"): continuação do nome
         do prato, que o PDF quebrou em duas linhas;
+      - linha repetindo a primeira palavra do item corrente ("Molho
+        vinagrete" depois de "Molho de pimenta"): item novo — é lista;
+      - pitch exatamente igual à entrelinha da coluna: continuação, porque
+        o PDF não deixou respiro entre as linhas do mesmo item
+        ("Coxa e Sobrecoxa" / "Desossada na Manteiga de Ervas");
       - caso contrário: item novo.
 
-    A lista de molhos ("Molho vinagrete"/"Molho de pimenta") usa pitch
-    idêntico ao das quebras de linha de um nome comprido ("Mousse de /
-    Chocolate c/ / Ganache de Café e / Praliné Amendoim"), por isso o
-    critério é o TEXTO da linha anterior, não a geometria.
+    A lista de molhos usa pitch idêntico ao das quebras de linha de um nome
+    comprido ("Mousse de / Chocolate c/ / Ganache de Café e / Praliné
+    Amendoim"); por isso a regra da palavra repetida vem ANTES da regra da
+    entrelinha, e o segundo sinal é o TEXTO da linha anterior, não só a
+    geometria.
     """
     n = len(lines)
     if n == 0:
         return []
     item = [ln["size"] >= 9.0 for ln in lines]  # 10pt = prato; 6/8pt = descrição
+    leading = _block_leading(lines)
     trans = [None] * n
+    start = 0                                  # índice da 1a linha do bloco atual
     for i in range(1, n):
         gap = lines[i]["top"] - lines[i - 1]["bottom"]
-        pitch = lines[i]["top"] - lines[i - 1]["top"]
+        pitch = _pitch(lines[i - 1], lines[i])
         if not item[i - 1] and not item[i]:
             trans[i] = "cont"            # duas linhas de descrição
         elif not item[i - 1]:
@@ -498,18 +676,24 @@ def _group_exec_blocks(lines):
             # quebra de linha dentro do mesmo item.
             trans[i] = ("cont" if (_cont_start(lines[i]["text"])
                                    or not (gap > EXEC_BLOCK_GAP
-                                           or pitch > EXEC_LINE_PITCH))
+                                           or pitch > leading + EXEC_PITCH_TOL))
                         else "new")
-        elif gap > EXEC_BLOCK_GAP or pitch > EXEC_LINE_PITCH:
-            trans[i] = "new"
+        elif gap > EXEC_BLOCK_GAP:
+            trans[i] = "new"             # respiro folgado entre itens
         elif _cont_start(lines[i]["text"]):
             trans[i] = "cont"
         elif _unfinished(lines[i - 1]["text"]):
             trans[i] = "cont"
+        elif _first_word(lines[i]["text"]) == _first_word(lines[start]["text"]):
+            trans[i] = "new"             # lista ("Molho pimenta"/"Molho vinagrete")
         elif len(lines[i]["text"].split()) == 1:
             trans[i] = "cont"            # palavra solta: nome do prato partido
+        elif abs(pitch - leading) <= EXEC_PITCH_TOL:
+            trans[i] = "cont"            # sem respiro: mesma linha digitada
         else:
             trans[i] = "new"
+        if trans[i] == "new":
+            start = i
     blocks, cur = [], [lines[0]]
     for i in range(1, n):
         if trans[i] == "new":
@@ -529,8 +713,15 @@ def _group_exec_blocks(lines):
 
 
 def parse_executivo_pdf(path):
-    """Parser do formato Executivo: retorna {data_iso: [{'label','value'}]}."""
-    out = {}
+    """Parser do formato Executivo.
+
+    Retorna (dias, feriados): `dias` mapeia data ISO -> [{'label','value'}] e
+    `feriados` mapeia data ISO -> texto do aviso ("Feriado"), para os dias em
+    que a coluna traz só "FERIADO" em vez de pratos. Sem essa distinção, o
+    feriado virava cinco itens com o texto "FERIADO" (um por categoria) no
+    site.
+    """
+    out, holidays = {}, {}
     with pdfplumber.open(path) as pdf:
         # datas/bordas de coluna vêm da primeira página (idênticas nas demais)
         p0 = pdf.pages[0]
@@ -538,7 +729,7 @@ def parse_executivo_pdf(path):
               for w in p0.extract_words(x_tolerance=EXEC_X_TOL)
               if DATE_RE.fullmatch(w["text"])]
         if not dw:
-            return out
+            return out, holidays
         centers = sorted(c for _, c in dw)
         bounds = ([0.0]
                   + [(a + b) / 2 for a, b in zip(centers, centers[1:])]
@@ -551,7 +742,12 @@ def parse_executivo_pdf(path):
             out.setdefault(iso, [])
 
         for i, page in enumerate(pdf.pages):
-            words = page.extract_words(x_tolerance=EXEC_X_TOL, extra_attrs=["size"])
+            words = page.extract_words(x_tolerance=EXEC_X_TOL,
+                                       extra_attrs=["size"])
+            # "matrix" NÃO pode ir em extra_attrs: o pdfplumber deixa de
+            # agrupar as letras em palavras e devolve um "word" por letra.
+            # As linhas de base vêm dos chars (que já trazem a matriz).
+            chars = page.chars
             # categoria: título no topo da página, se casar com uma conhecida
             # (a ordem das páginas no PDF pode mudar); posição como fallback
             top_norm = strip_accents(" ".join(w["text"] for w in words
@@ -582,17 +778,26 @@ def parse_executivo_pdf(path):
                 sorted_lines = []
                 for key in sorted(lines):
                     lws = sorted(lines[key], key=lambda w: w["x0"])
+                    top = min(w["top"] for w in lws)
                     sorted_lines.append({
-                        "top": min(w["top"] for w in lws),
+                        "top": top,
                         "bottom": max(w["bottom"] for w in lws),
                         "size": max(w["size"] for w in lws),
+                        # linha de base (matriz do texto): mede entrelinha sem
+                        # o ruído de acentos e descendentes
+                        "base": _baseline_of(chars, top),
                         "text": re.sub(r"\s+", " ", " ".join(w["text"] for w in lws)).strip(),
                     })
 
                 # agrupar linhas consecutivas em blocos (itens)
                 for b in _group_exec_blocks(sorted_lines):
-                    text = _tidy(" ".join(ln["text"] for ln in b)).strip(" ,;")
+                    text = _trim_trailing_connector(
+                        _tidy(" ".join(ln["text"] for ln in b)).strip(" ,;"))
                     if len(text) < 2:
+                        continue
+                    if strip_accents(text).upper() == EXEC_HOLIDAY:
+                        holidays.setdefault(isos[j], EXEC_HOLIDAY.capitalize())
+                        out[isos[j]] = []
                         continue
                     out[isos[j]].append({"label": cat, "value": text})
 
@@ -615,7 +820,11 @@ def parse_executivo_pdf(path):
                         items[i]["label"] = f"{singular} {n}"
                 else:
                     items[idxs[0]]["label"] = singular
-    return out
+        # a coluna de feriado pode ser lida depois de outra página já ter
+        # preenchido o dia (ordem de páginas variável): o feriado manda
+        for iso in holidays:
+            out[iso] = []
+    return out, holidays
 
 
 # ---------------------------------------------------------------------------
@@ -829,6 +1038,18 @@ JSON_CONTENT_KEYS = ("campus", "campus_name", "meals_order", "meals_names",
                      "sources", "days")
 
 
+def read_json(path):
+    """JSON de `path`, ou None se não existir/estiver corrompido.
+
+    Usado para herdar o conteúdo anterior (dias que o PDF novo não cobre) e
+    para não regravar arquivo igual: JSON inválido não pode derrubar a coleta.
+    """
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
 def write_campus_json(out, dest):
     """Grava o JSON do campus.
 
@@ -838,10 +1059,7 @@ def write_campus_json(out, dest):
     em que o cardápio realmente mudou.
     """
     if dest.exists():
-        try:
-            old = json.loads(dest.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError, ValueError):
-            old = None
+        old = read_json(dest)
         if isinstance(old, dict) and all(old.get(k) == out[k]
                                          for k in JSON_CONTENT_KEYS):
             print(f"Conteúdo de {dest.name} inalterado — nada a gravar")
@@ -859,6 +1077,51 @@ def week_has_items(week, executivo=False):
     if executivo:
         return any(items for items in week.values())
     return any(items for day in week.values() for items in day.values())
+
+
+def day_items(day):
+    """Itens de um dia do JSON, ignorando chaves de aviso ("note")."""
+    if not isinstance(day, dict):
+        return []
+    return [it for items in day.values() if isinstance(items, list) for it in items]
+
+
+def monday_of(day):
+    """Segunda-feira da semana de `day` (as semanas do RU começam na segunda)."""
+    return day - timedelta(days=day.weekday())
+
+
+def carry_over_days(week, previous, today):
+    """Preserva do JSON anterior os dias ainda vigentes.
+
+    A UnB troca o PDF da semana na listagem assim que o da semana seguinte
+    está pronto — o Executivo passou a publicar "SEMANA-01-16-11-..." e
+    sumiu com o PDF da semana em curso. Sem esta herança, o site perdia a
+    quinta e a sexta da semana atual no meio da tarde de uma quarta-feira
+    (aconteceu no commit 5e24627: o Executivo ficou só com 16-20/11 num dia
+    12/11).
+
+    Só entram dias da semana corrente em diante (`iso >= segunda-feira de
+    hoje`), e só quando o PDF novo não trouxe nada para eles: o dado
+    recém-extraído sempre vence, exceto quando o dia veio vazio e sem aviso
+    (feriado é aviso, não ausência).
+    """
+    if not isinstance(previous, dict):
+        return week, []
+    cutoff = monday_of(today).isoformat()
+    kept = []
+    for iso, day in sorted(previous.items()):
+        if iso < cutoff or not day_items(day):
+            continue
+        current = week.get(iso)
+        if day_items(current) or (isinstance(current, dict) and current.get("note")):
+            continue
+        week[iso] = day
+        kept.append(iso)
+    if kept:
+        print("Dias preservados do JSON anterior (o PDF novo não os cobre):",
+              ", ".join(kept))
+    return week, kept
 
 
 def process_campus(key, cfg, today=None):
@@ -879,12 +1142,17 @@ def process_campus(key, cfg, today=None):
         src = {"file": p.name, "url": u}
 
         if key == "executivo":
-            week_flat = parse_executivo_pdf(p)
-            print(f"{p.name}: {len(week_flat)} dia(s) extraído(s)")
-            if not week_has_items(week_flat, executivo=True):
+            week_flat, holidays = parse_executivo_pdf(p)
+            print(f"{p.name}: {len(week_flat)} dia(s) extraído(s)"
+                  + (f", {len(holidays)} feriado(s)" if holidays else ""))
+            # semana inteira de feriado é conteúdo válido (o site avisa que é
+            # feriado); o que não pode passar é semana sem prato e sem aviso
+            if not week_has_items(week_flat, executivo=True) and not holidays:
                 raise RuntimeError(f"nada extraído de {p}")
             # formato plano -> uma única "refeição"
             week = {iso: {"principal": items} for iso, items in week_flat.items()}
+            for iso, note in holidays.items():
+                week.setdefault(iso, {"principal": []})["note"] = note
         else:
             week = parse_table_pdf(p)
             print(f"{p.name}: {len(week)} dia(s) extraído(s)")
@@ -893,6 +1161,11 @@ def process_campus(key, cfg, today=None):
 
         merged.update(week)
         sources.append(src)
+
+    dest = SITE_DATA / f"cardapio-{key}.json"
+    previous = (read_json(dest) or {}).get("days")
+    today = today or datetime.now(TZ_BSB).date()
+    merged, _ = carry_over_days(merged, previous, today)
 
     meals_order = ["principal"] if key == "executivo" else MEAL_ORDER
     meals_names = {"principal": "Cardápio"} if key == "executivo" else MEAL_PRETTY
@@ -907,7 +1180,6 @@ def process_campus(key, cfg, today=None):
         "days": dict(sorted(merged.items())),
     }
     SITE_DATA.mkdir(exist_ok=True)
-    dest = SITE_DATA / f"cardapio-{key}.json"
     write_campus_json(out, dest)
     print(f"OK -> {dest} ({len(out['days'])} dias)")
     return out
@@ -929,12 +1201,17 @@ def main():
         if not path.exists():
             sys.exit(f"PDF não encontrado: {path}")
         cfg = CAMPUS[key]
-        parser = parse_executivo_pdf if key == "executivo" else parse_table_pdf
-        week = parser(path)
-        if not week_has_items(week, executivo=(key == "executivo")):
-            sys.exit(f"ERRO: nada extraído de {path} — JSON anterior mantido")
         if key == "executivo":
-            week = {iso: {"principal": items} for iso, items in week.items()}
+            week_flat, holidays = parse_executivo_pdf(path)
+            if not week_has_items(week_flat, executivo=True) and not holidays:
+                sys.exit(f"ERRO: nada extraído de {path} — JSON anterior mantido")
+            week = {iso: {"principal": items} for iso, items in week_flat.items()}
+            for iso, note in holidays.items():
+                week.setdefault(iso, {"principal": []})["note"] = note
+        else:
+            week = parse_table_pdf(path)
+            if not week_has_items(week):
+                sys.exit(f"ERRO: nada extraído de {path} — JSON anterior mantido")
         out = {
             "campus": key,
             "campus_name": cfg["name"],
