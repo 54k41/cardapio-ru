@@ -2,74 +2,61 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cardápio RU · Restaurante Universitário da UnB</title>
   <meta name="description" content="Cardápio semanal do Restaurante Universitário da UnB – todos os campi e Executivo, atualizado automaticamente dos PDFs oficiais.">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
-  <meta name="color-scheme" content="light dark">
-  <link rel="preload" href="fonts/lexend-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d4ed8'/><text x='16' y='22' font-family='system-ui,sans-serif' font-size='13' font-weight='600' text-anchor='middle' fill='%23fff'>RU</text></svg>">
-  <link rel="stylesheet" href="styles.css?v=20261112">
+  <meta name="theme-color" content="#1e40af">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+  <link rel="stylesheet" href="styles.css?v=20260924b">
 </head>
 <body>
-  <a class="skip-link" href="#menu-card">Ir para o cardápio</a>
-
-  <header class="masthead">
-    <div class="masthead-inner">
+  <header class="topbar">
+    <div class="topbar-inner">
       <div class="brand">
-        <span class="brand-mark" aria-hidden="true">RU</span>
-        <div class="brand-text">
+        <span class="brand-icon">🍽️</span>
+        <div>
           <h1>Cardápio RU</h1>
-          <p class="brand-sub">Restaurante Universitário · UnB</p>
+          <label class="campus-wrap">
+            <select id="campus-select" aria-label="Selecionar campus">
+              <option value="darcy">Darcy Ribeiro · UnB</option>
+              <option value="executivo">Executivo</option>
+              <option value="fcts">Ceilândia · FCTS</option>
+              <option value="fcte">Gama · FCTE</option>
+              <option value="fup">Planaltina · FUP</option>
+              <option value="fal">FAL</option>
+            </select>
+          </label>
         </div>
       </div>
-      <label class="campus-wrap">
-        <span class="visually-hidden">Campus</span>
-        <select id="campus-select" aria-label="Selecionar campus">
-          <option value="darcy">Darcy Ribeiro</option>
-          <option value="executivo">Executivo</option>
-          <option value="fcts">Ceilândia · FCTS</option>
-          <option value="fcte">Gama · FCTE</option>
-          <option value="fup">Planaltina · FUP</option>
-          <option value="fal">FAL · Fazenda</option>
-        </select>
-      </label>
+      <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener" hidden>
+        <span>PDF oficial</span><span class="arrow">↗</span>
+      </a>
     </div>
-    <p id="status-banner" class="status-banner" role="status" hidden></p>
+    <p id="status-banner" class="status-banner" hidden></p>
   </header>
 
-  <nav class="week-nav" aria-label="Escolha do dia">
-    <button type="button" class="week-step" id="week-prev" hidden aria-label="Semana anterior">‹</button>
-    <div class="day-tabs" id="day-tabs" role="tablist" aria-label="Dias da semana"></div>
-    <button type="button" class="week-step" id="week-next" hidden aria-label="Próxima semana">›</button>
-  </nav>
-  <p class="week-label" id="week-label" hidden></p>
+  <nav class="day-tabs" id="day-tabs" aria-label="Dias da semana"></nav>
 
   <main class="container">
-    <div class="meal-switch" id="meal-tabs" role="tablist" aria-label="Refeições">
-      <button type="button" role="tab" data-meal="principal" id="tab-principal" hidden aria-selected="false" aria-controls="menu-card">Cardápio</button>
-      <button type="button" role="tab" data-meal="cafe" id="tab-cafe" aria-selected="false" aria-controls="menu-card">Café</button>
-      <button type="button" role="tab" data-meal="almoco" id="tab-almoco" aria-selected="true" aria-controls="menu-card">Almoço</button>
-      <button type="button" role="tab" data-meal="jantar" id="tab-jantar" aria-selected="false" aria-controls="menu-card">Jantar</button>
-    </div>
+    <section class="meal-switch" role="tablist" aria-label="Refeições">
+      <button role="tab" data-meal="principal" hidden><span class="meal-ico">🍽️</span><span class="long">Cardápio</span><span class="short">Cardápio</span></button>
+      <button role="tab" data-meal="cafe"><span class="meal-ico">☕</span><span class="long">Café da manhã</span><span class="short">Café</span></button>
+      <button role="tab" data-meal="almoco" class="active"><span class="meal-ico">🍛</span><span class="long">Almoço</span><span class="short">Almoço</span></button>
+      <button role="tab" data-meal="jantar"><span class="meal-ico">🌙</span><span class="long">Jantar</span><span class="short">Jantar</span></button>
+    </section>
 
-    <div class="diet-switch" id="diet-switch" role="group" aria-label="Preferência alimentar" hidden>
-      <button type="button" class="diet-chip" data-diet="padrao" aria-pressed="true">Padrão</button>
-      <button type="button" class="diet-chip" data-diet="ovolacto" aria-pressed="false">Ovolacto</button>
-      <button type="button" class="diet-chip" data-diet="estrito" aria-pressed="false">Estrito</button>
-    </div>
-
-    <section id="menu-card" class="menu-card" role="tabpanel" tabindex="-1" aria-live="polite" aria-label="Cardápio do dia"></section>
+    <section id="menu-card" class="menu-card" aria-live="polite"></section>
 
     <footer class="page-footer">
       <p id="updated-at"></p>
       <p class="disclaimer">Cardápio sujeito a alterações · Fonte oficial:
-        <a href="https://ru.unb.br/cardapio/" target="_blank" rel="noopener">ru.unb.br/cardapio</a>
-        · <a id="source-link" href="#" target="_blank" rel="noopener" hidden>PDF oficial</a></p>
+        <a href="https://ru.unb.br/cardapio/" target="_blank" rel="noopener">ru.unb.br/cardapio</a></p>
     </footer>
   </main>
 
-  <script src="app.js?v=20261112"></script>
+  <script src="app.js?v=20261111"></script>
 </body>
 </html>

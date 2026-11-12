@@ -25,18 +25,14 @@ Interface web rápida, responsiva e minimalista para consultar o cardápio seman
 
 ## Destaques
 
-- **Editorial UnB (Opção A):** superfície contínua, fio de 1px e acento azul — sem gradientes, sombras ou sobreposição de cartões, e sem emojis (que mudam de forma em cada sistema). Os **7 dias cabem numa linha** de 390 px, sem rolagem lateral, e a refeição inteira cabe na primeira dobra do celular.
-- **Seleção de dieta (`Padrão · Ovolacto · Estrito`):** filtra as variantes de prato principal e de complemento publicadas nos PDFs. A preferência fica salva e o seletor some nos campi que publicam um cardápio único (Executivo).
-- **Itens burocráticos agrupados:** saladas + molhos, sobremesa + refresco e sopa + torrada viram linhas corridas; o prato principal fica como manchete tipográfica.
-- **Consulta rápida:** abre na refeição provável pelo horário de Brasília (café, almoço ou jantar), lembra o último campus, mantém os campi já visitados em memória para troca instantânea e mostra um seletor de semana quando o JSON cobre duas semanas.
+- **Leitura rápida no celular:** layout leve em HTML, CSS e JS puros, sem frameworks, abrindo direto no dia atual pelo fuso de Brasília (`UTC-3`).
 - **Extração tolerante a variações de PDF:**
   - *Parser tabelado* para os campi (Darcy, FCTS, FCTE, FUP e FAL), tratando cabeçalhos divididos, colunas deslocadas, células mescladas e valores quebrados em várias linhas (com hifenização e itens listados na mesma célula resolvidos).
   - *Parser espacial* para o Restaurante Executivo (PDF sem grade, organizado por páginas de categoria e colunas de data), que mede a entrelinha de cada coluna para não partir um prato em dois itens.
-  - Dias de **FERIADO** no Executivo deixam de virar cinco itens com o texto "FERIADO": o dia aparece com o aviso certo.
-- **Descoberta automática da semana vigente:** identifica o PDF correto mesmo com variações de nomenclatura, sufixos de reenvio no WordPress ou pequenos erros de data no nome do arquivo, mantendo link direto para o PDF oficial no rodapé.
+  - Dias de **FERIADO** no Executivo deixam de virar cinco itens com o texto "FERIADO".
+- **Descoberta automática da semana vigente:** identifica o PDF correto mesmo com variações de nomenclatura, sufixos de reenvio no WordPress ou pequenos erros de data no nome do arquivo, mantendo link direto para o PDF oficial no topo do site.
 - **Semana que muda no meio do caminho:** quando a UnB troca o PDF e some com o da semana em curso (acontece no Executivo), os dias ainda vigentes do JSON anterior são preservados em vez de desaparecerem.
-- **Offline e tolerância a falhas:** service worker com *network-first* para os dados e *cache-first* para os estáticos, além do último JSON de cada campus no `localStorage` — funciona no subsolo do ICC/Minhocão. O banner avisa quando os dados são salvos ou de uma semana anterior.
-- **Modo escuro e acessibilidade:** `prefers-color-scheme`, `prefers-reduced-motion`, foco visível, abas com semântica ARIA e navegação por setas/Home/End. A fonte Lexend (variável `.woff2`, licença OFL) é auto-hospedada: nenhuma requisição a terceiros.
+- **Funcionamento offline e tolerância a falhas:** salva a última versão carregada de cada campus no `localStorage` e avisa visualmente caso exiba dados em cache ou de semana anterior.
 
 ---
 
@@ -52,8 +48,7 @@ cardapio-ru/
 │   ├── index.html
 │   ├── app.js
 │   ├── styles.css
-│   ├── sw.js                     # Service worker (offline)
-│   ├── fonts/                    # Lexend variável self-hosted + licença OFL
+│   ├── sw.js                     # Só desregistra o service worker de versões antigas
 │   └── data/                     # cardapio-<campus>.json versionados e servidos pelo site
 ├── data/                         # Cache temporário dos PDFs baixados (ignorado pelo Git)
 ├── build.py                      # Valida os JSONs gerados antes do deploy
