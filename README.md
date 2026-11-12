@@ -105,7 +105,6 @@ O workflow [`.github/workflows/update.yml`](.github/workflows/update.yml) manté
 - **Domingos às 20h00 (horário de Brasília):** faz a virada automática para o cardápio da semana seguinte logo após as 19h30 (fechamento da entrada do jantar de domingo no RU).
 - **Proteção contra dados vazios:** se a coleta de um campus falhar, os demais continuam sendo atualizados normalmente e o campus com erro preserva o último JSON válido. O `build.py` impede que arquivos vazios ou corrompidos sobrescrevam a versão publicada.
 - **Commit só quando o cardápio muda:** o extrator preserva o `generated_at` quando o conteúdo é idêntico, então o cron não gera commits que apenas alterariam o horário.
-- **Espelho opcional no Vercel:** além do GitHub Pages, o workflow publica uma cópia em `cardapio-ru.vercel.app` (requer os secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID` e `VERCEL_PROJECT_ID`). Esse passo roda por último, de propósito: se ele falhar, o Pages já publicou.
 
 ---
 
