@@ -1,7 +1,7 @@
 {
   "campus": "fal",
   "campus_name": "Fazenda Água Limpa (FAL)",
-  "generated_at": "2026-11-12T13:33:42-03:00",
+  "generated_at": "2026-11-12T16:02:18-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -27,7 +27,7 @@
         },
         {
           "label": "Panificação",
-          "value": "Pão francês ou Pão careca ou"
+          "value": "Pão francês ou Pão careca"
         },
         {
           "label": "Opção Extra",
@@ -85,7 +85,7 @@
         },
         {
           "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
+          "value": "Arroz branco e integral / Feijão carioca"
         },
         {
           "label": "Sobremesa",
@@ -159,11 +159,11 @@
         },
         {
           "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
+          "value": "Arroz branco e integral / Feijão preto"
         },
         {
           "label": "Sobremesa",
-          "value": "Mix de doces OPÇÃO: Frutas"
+          "value": "Mix de doces / OPÇÃO: Frutas"
         },
         {
           "label": "Bebida (Refresco de)",
@@ -233,7 +233,7 @@
         },
         {
           "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
+          "value": "Arroz branco e integral / Feijão carioca"
         },
         {
           "label": "Sobremesa",
@@ -253,7 +253,7 @@
         },
         {
           "label": "Panificação",
-          "value": "Pão francês ou Pão careca ou"
+          "value": "Pão francês ou Pão careca"
         },
         {
           "label": "Opção Extra",
@@ -311,7 +311,7 @@
         },
         {
           "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão preto"
+          "value": "Arroz branco e integral / Feijão preto"
         },
         {
           "label": "Sobremesa",
@@ -385,7 +385,7 @@
         },
         {
           "label": "Acompanhamentos",
-          "value": "Arroz branco e integral Feijão carioca"
+          "value": "Arroz branco e integral / Feijão carioca"
         },
         {
           "label": "Sobremesa",
