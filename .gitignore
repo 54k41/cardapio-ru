@@ -5,3 +5,6 @@
 data/*.pdf
 __pycache__/
 data/samples/
+
+# link local com o projeto do Vercel (contém orgId/projectId)
+.vercel/

@@ -22,6 +22,28 @@ const CAMPUS = [
 ];
 const DEFAULT_CAMPUS = "darcy";
 
+/* localStorage pode lançar exceção (modo privado do Safari, cota estourada,
+   storage desabilitado por política do navegador). Nunca deixe isso derrubar
+   o app: sem storage o site funciona, só não guarda preferência/cache. */
+function storeGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    console.warn("localStorage indisponível para leitura:", e);
+    return null;
+  }
+}
+
+function storeSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (e) {
+    console.warn("localStorage indisponível para escrita:", e);
+    return false;
+  }
+}
+
 let state = {
   campus: null,
   data: null,
@@ -31,10 +53,11 @@ let state = {
 };
 
 function todayISO() {
-  // Data de hoje no fuso de Brasília (UTC-3), independente do relógio do dispositivo
-  const now = new Date();
-  const bsb = new Date(now.getTime() - 3 * 60 * 60 * 1000 + now.getTimezoneOffset() * 60 * 1000);
-  return `${bsb.getFullYear()}-${String(bsb.getMonth() + 1).padStart(2, "0")}-${String(bsb.getDate()).padStart(2, "0")}`;
+  // Data de hoje no fuso de Brasília (UTC-3, sem horário de verão desde
+  // 2019), independente do fuso/relógio do dispositivo — sem depender de
+  // getTimezoneOffset(), que erra por 1h na transição do horário de verão
+  // do próprio dispositivo
+  return new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
 function weekStartISO(iso) {
@@ -54,15 +77,22 @@ async function loadCampus(id) {
     const res = await fetch(campusFile(id), { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
-    localStorage.setItem(`cardapio-cache-${id}`, JSON.stringify(json));
+    if (!json || typeof json !== "object" || !json.days) {
+      throw new Error("JSON inesperado (sem 'days')");
+    }
+    // guardar o cache é opcional: se falhar (cota cheia), os dados recém
+    // baixados continuam valendo nesta sessão
+    storeSet(`cardapio-cache-${id}`, JSON.stringify(json));
     return { json, stale: false };
   } catch (e) {
     console.warn("Falha ao buscar cardápio:", e);
-    try {
-      const cached = localStorage.getItem(`cardapio-cache-${id}`);
-      if (cached) return { json: JSON.parse(cached), stale: true };
-    } catch (cacheErr) {
-      console.warn("Cache local inválido:", cacheErr);
+    const cached = storeGet(`cardapio-cache-${id}`);
+    if (cached) {
+      try {
+        return { json: JSON.parse(cached), stale: true };
+      } catch (cacheErr) {
+        console.warn("Cache local inválido:", cacheErr);
+      }
     }
     return { json: null, stale: false };
   }
@@ -76,6 +106,10 @@ function fmtDay(iso) {
 
 function renderStatus() {
   const banner = document.getElementById("status-banner");
+  if (!state.data || !state.data.days) {
+    banner.hidden = true;
+    return;
+  }
   const isos = Object.keys(state.data.days);
   // cardápio de uma semana anterior à atual (PDF novo ainda não publicado)
   const outdated = isos.length && weekStartISO(todayISO()) > isos[isos.length - 1];
@@ -113,9 +147,10 @@ function renderTabs() {
 
 function renderMenu() {
   const card = document.getElementById("menu-card");
-  const dayMenu = state.data.days[state.selectedDay] || {};
-  const mealKey = state.data.meals_order.includes(state.selectedMeal)
-    ? state.selectedMeal : state.data.meals_order[0];
+  const dayMenu = (state.data.days || {})[state.selectedDay] || {};
+  const order = state.data.meals_order && state.data.meals_order.length
+    ? state.data.meals_order : MEAL_ORDER;
+  const mealKey = order.includes(state.selectedMeal) ? state.selectedMeal : order[0];
   const items = dayMenu[mealKey];
 
   card.style.animation = "none";
@@ -179,12 +214,14 @@ function renderFooter() {
   const sourceLink = document.getElementById("source-link");
   const { generated_at, sources } = state.data;
 
-  // generated_at vem em horário de Brasília (-03:00); exibir como está
-  const raw = String(generated_at).replace(/-0?3:?00$/, "");
-  const dt = new Date(raw.endsWith("Z") ? raw : raw + "-03:00");
-  updatedAt.textContent =
-    "Atualizado em " + dt.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) +
-    (state.stale ? " · dados salvos" : "");
+  // generated_at é ISO 8601 com offset (-03:00): new Date faz o parse
+  // direto, qualquer offset que venha — sem recortar/recolar o sufixo de
+  // fuso, o que produzia Invalid Date para offsets diferentes de -03:00
+  const dt = generated_at ? new Date(generated_at) : null;
+  updatedAt.textContent = (dt && !isNaN(dt.getTime()))
+    ? "Atualizado em " + dt.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) +
+      (state.stale ? " · dados salvos" : "")
+    : String(generated_at || "");
 
   const src = sources && sources.find(s => s.url);
   if (src && src.url) {
@@ -195,8 +232,27 @@ function renderFooter() {
   }
 }
 
+function clearCampusChrome() {
+  // Sem dados não pode sobrar nada do campus anterior na tela: link do PDF
+  // oficial, rodapé, banner de status e abas de refeição (o rótulo varia
+  // por campus — "Almoço" aqui, "Cardápio" no Executivo).
+  const sourceLink = document.getElementById("source-link");
+  if (sourceLink) {
+    sourceLink.hidden = true;
+    sourceLink.removeAttribute("href");
+  }
+  const updatedAt = document.getElementById("updated-at");
+  if (updatedAt) updatedAt.textContent = "";
+  const banner = document.getElementById("status-banner");
+  if (banner) banner.hidden = true;
+  document.querySelectorAll(".meal-switch button").forEach(btn => {
+    btn.hidden = true;
+  });
+}
+
 function render() {
   if (!state.data || !Object.keys(state.data.days || {}).length) {
+    clearCampusChrome();
     document.getElementById("menu-card").innerHTML =
       `<div class="unavailable"><span class="big">🍽️</span>
        Não foi possível carregar o cardápio deste campus.<br>Verifique sua conexão e recarregue a página.</div>`;
@@ -212,7 +268,7 @@ function render() {
 
 async function selectCampus(id, { updateHash = true } = {}) {
   state.campus = id;
-  localStorage.setItem("cardapio-campus", id);
+  storeSet("cardapio-campus", id);
   if (updateHash) history.replaceState(null, "", `#${id}`);
 
   // marca o seletor e o título da página
@@ -233,7 +289,7 @@ async function selectCampus(id, { updateHash = true } = {}) {
   state.data = json;
   state.stale = stale;
 
-  if (json && Object.keys(json.days).length) {
+  if (json && Object.keys(json.days || {}).length) {
     const isos = Object.keys(json.days);
     const today = todayISO();
     // sem dia atual/ futuro no cardápio, mostra o dia mais recente disponível
@@ -241,7 +297,8 @@ async function selectCampus(id, { updateHash = true } = {}) {
     state.selectedDay = isos.includes(today)
       ? today
       : isos.find(i => i >= today) || isos[isos.length - 1];
-    const order = json.meals_order || MEAL_ORDER;
+    const order = (json.meals_order && json.meals_order.length)
+      ? json.meals_order : MEAL_ORDER;
     if (!order.includes(state.selectedMeal)) state.selectedMeal = order.includes("almoco") ? "almoco" : order[0];
   }
   render();
@@ -249,7 +306,9 @@ async function selectCampus(id, { updateHash = true } = {}) {
 
 function setupCampusSelect() {
   const sel = document.getElementById("campus-select");
-  sel.value = state.campus;
+  // o valor corrente cabe ao selectCampus (chamado logo em seguida no init);
+  // o listener precisa existir ANTES do primeiro carregamento — senão uma
+  // troca durante o fetch inicial se perde e o select reverte a escolha
   sel.addEventListener("change", () => selectCampus(sel.value));
 }
 
@@ -266,16 +325,16 @@ function setupMealSwitch() {
 
 (async function init() {
   setupMealSwitch();
+  setupCampusSelect();
 
   // campus inicial: hash da URL > preferência salva > padrão
   const fromHash = location.hash.replace("#", "");
-  const saved = localStorage.getItem("cardapio-campus");
+  const saved = storeGet("cardapio-campus");
   let campus = CAMPUS.find(c => c.id === fromHash)?.id
             || CAMPUS.find(c => c.id === saved)?.id
             || DEFAULT_CAMPUS;
 
   await selectCampus(campus, { updateHash: false });
-  setupCampusSelect();
 
   // troca de campus ao navegar por hash (ex.: colar um link #fcte depois do load)
   window.addEventListener("hashchange", () => {

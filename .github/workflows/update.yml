@@ -33,6 +33,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # histórico completo: o commit de dados pode
+                           # precisar de rebase sobre um push manual
 
       - uses: actions/setup-python@v5
         with:
@@ -47,6 +50,10 @@ jobs:
       - name: Publicar dados no site
         run: python build.py
 
+      # Os JSONs só mudam quando o cardápio muda de verdade: o
+      # fetch_cardapio.py preserva o generated_at quando o conteúdo é igual,
+      # então `git diff --cached --quiet` consegue ser verdadeiro e o cron
+      # deixa de gerar commits que só alteram o timestamp.
       - name: Commitar dados atualizados no repo
         run: |
           git config user.name "github-actions[bot]"
@@ -56,6 +63,8 @@ jobs:
             echo "Nenhum dado alterado — nada a commitar"
           else
             git commit -m "Dados do cardápio atualizados automaticamente [skip ci]"
+            # um push manual na main durante a coleta não pode quebrar o cron
+            git pull --rebase origin main
             git push
           fi
 
@@ -67,6 +76,20 @@ jobs:
         with:
           path: site
 
-      - name: Deploy
+      - name: Deploy no GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Espelho com URL neutra (cardapio-ru.vercel.app) — é este o link a
+      # compartilhar, para não expor a conta 54k41. Fica depois do Pages de
+      # propósito: se o Vercel falhar, o Pages já publicou.
+      # Requer os secrets VERCEL_TOKEN, VERCEL_ORG_ID e VERCEL_PROJECT_ID.
+      - name: Deploy no Vercel (espelho)
+        working-directory: site
+        # --token explícito: em CI a CLI não faz login interativo e nem
+        # sempre lê VERCEL_TOKEN do ambiente sozinha
+        run: npx --yes vercel@59 deploy --prod --yes --token "$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
