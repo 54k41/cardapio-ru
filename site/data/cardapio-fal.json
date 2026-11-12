@@ -1,7 +1,7 @@
 {
   "campus": "fal",
   "campus_name": "Fazenda Água Limpa (FAL)",
-  "generated_at": "2026-11-11T18:46:48-03:00",
+  "generated_at": "2026-11-12T13:33:42-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -22,8 +22,8 @@
     "2026-11-09": {
       "cafe": [
         {
-          "label": "Bebida (Refresco de)",
-          "value": "Leite integral OU Bebida de soja"
+          "label": "Bebidas",
+          "value": "Leite integral OU Bebida de soja / Café OU chá"
         },
         {
           "label": "Panificação",
@@ -100,8 +100,16 @@
     "2026-11-10": {
       "cafe": [
         {
+          "label": "Bebidas",
+          "value": "Leite integral OU Bebida de soja / Café OU chá"
+        },
+        {
           "label": "Panificação",
           "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Gordura",
+          "value": "Manteiga ou creme vegetal"
         },
         {
           "label": "Complemento Padrão",
@@ -166,8 +174,16 @@
     "2026-11-11": {
       "cafe": [
         {
+          "label": "Bebidas",
+          "value": "Leite integral OU Bebida de soja / Café OU chá"
+        },
+        {
           "label": "Panificação",
           "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Gordura",
+          "value": "Manteiga ou creme vegetal"
         },
         {
           "label": "Complemento Padrão",
@@ -232,12 +248,20 @@
     "2026-11-12": {
       "cafe": [
         {
+          "label": "Bebidas",
+          "value": "Leite integral OU Bebida de soja / Café OU chá"
+        },
+        {
           "label": "Panificação",
           "value": "Pão francês ou Pão careca ou"
         },
         {
           "label": "Opção Extra",
           "value": "Cuscuz de milho"
+        },
+        {
+          "label": "Gordura",
+          "value": "Manteiga ou creme vegetal"
         },
         {
           "label": "Complemento Padrão",
@@ -302,8 +326,16 @@
     "2026-11-13": {
       "cafe": [
         {
+          "label": "Bebidas",
+          "value": "Leite integral OU Bebida de soja / Café OU chá"
+        },
+        {
           "label": "Panificação",
           "value": "Pão francês ou Pão careca ou Pão integral"
+        },
+        {
+          "label": "Gordura",
+          "value": "Manteiga ou creme vegetal"
         },
         {
           "label": "Complemento Padrão",
