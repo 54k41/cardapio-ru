@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-11-12T16:14:29-03:00",
+  "generated_at": "2026-11-13T13:52:15-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-01-16-11-a-19-11.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-01-16-11-a-19-11.pdf"
+      "file": "executivo-SEMANA-04-09-11-a-13-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-04-09-11-a-13-11-2.pdf"
     }
   ],
   "days": {
@@ -1170,10 +1170,6 @@
           "value": "Salada de frutas"
         }
       ]
-    },
-    "2026-11-20": {
-      "principal": [],
-      "note": "Feriado"
     }
   }
 }
