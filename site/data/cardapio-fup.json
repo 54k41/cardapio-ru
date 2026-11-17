@@ -1,7 +1,7 @@
 {
   "campus": "fup",
   "campus_name": "Planaltina (FUP)",
-  "generated_at": "2026-11-16T16:05:54-03:00",
+  "generated_at": "2026-11-17T15:00:47-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "fup-Planaltina-Semana-01-16-11-a-22-11.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Planaltina-Semana-01-16-11-a-22-11.pdf"
+      "file": "fup-Planaltina-Semana-01-16-11-a-22-11-1.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Planaltina-Semana-01-16-11-a-22-11-1.pdf"
     }
   ],
   "days": {
@@ -429,7 +429,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Carne de sol acebolada"
+          "value": "Lagarto ao molho escuro"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
