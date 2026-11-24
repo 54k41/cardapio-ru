@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-11-23T17:44:28-03:00",
+  "generated_at": "2026-11-24T16:49:52-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-02-23-11-a-27-11-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11-1.pdf"
+      "file": "executivo-SEMANA-02-23-11-a-27-11.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11.pdf"
     }
   ],
   "days": {
@@ -215,11 +215,11 @@
         },
         {
           "label": "Guarnição 3",
-          "value": "Pastel de carne de sol"
+          "value": "Pastel de carne moída"
         },
         {
           "label": "Guarnição 4",
-          "value": "Lasanha Napolitana"
+          "value": "Torta de espinafre"
         },
         {
           "label": "Guarnição 5",
