@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-11-24T16:49:52-03:00",
+  "generated_at": "2026-11-25T15:55:04-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-02-23-11-a-27-11.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11.pdf"
+      "file": "executivo-SEMANA-02-23-11-a-27-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11-2.pdf"
     }
   ],
   "days": {
@@ -347,7 +347,7 @@
         },
         {
           "label": "Guarnição 4",
-          "value": "Quiche de Alho Poró"
+          "value": "Nhoque ao molho Sugo"
         },
         {
           "label": "Guarnição 5",
@@ -603,7 +603,7 @@
         },
         {
           "label": "Guarnição 4",
-          "value": "Nhoque ao molho Sugo"
+          "value": "Quiche de Alho Poró"
         },
         {
           "label": "Guarnição 5",
