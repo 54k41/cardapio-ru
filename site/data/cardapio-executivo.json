@@ -1,7 +1,7 @@
 {
   "campus": "executivo",
   "campus_name": "Restaurante Executivo",
-  "generated_at": "2026-11-25T15:55:04-03:00",
+  "generated_at": "2026-11-25T20:29:13-03:00",
   "meals_order": [
     "principal"
   ],
@@ -10,8 +10,8 @@
   },
   "sources": [
     {
-      "file": "executivo-SEMANA-02-23-11-a-27-11-2.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11-2.pdf"
+      "file": "executivo-SEMANA-02-23-11-a-27-11-3.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/SEMANA-02-23-11-a-27-11-3.pdf"
     }
   ],
   "days": {
@@ -327,7 +327,7 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Omelete de brócolis com queijo"
+          "value": "Isca de soja ao sugo gratinada"
         },
         {
           "label": "Prato Principal 6",
@@ -455,11 +455,11 @@
         },
         {
           "label": "Prato Principal 5",
-          "value": "Bolinho de lentilha gratinado"
+          "value": "Risoto de espinafre"
         },
         {
           "label": "Prato Principal 6",
-          "value": "Charuto de repolho com PTS"
+          "value": "Charuto de couve com PTS"
         },
         {
           "label": "Guarnição 1",
