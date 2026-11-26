@@ -1,7 +1,7 @@
 {
   "campus": "darcy",
   "campus_name": "Darcy Ribeiro",
-  "generated_at": "2026-11-25T15:54:58-03:00",
+  "generated_at": "2026-11-26T15:44:10-03:00",
   "meals_order": [
     "cafe",
     "almoco",
@@ -14,8 +14,8 @@
   },
   "sources": [
     {
-      "file": "darcy-Darcy-Ribeiro-Semana-02-23-11-a-29-11-1.pdf",
-      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Darcy-Ribeiro-Semana-02-23-11-a-29-11-1.pdf"
+      "file": "darcy-Darcy-Ribeiro-Semana-02-23-11-a-29-11-2.pdf",
+      "url": "https://ru.unb.br/wp-content/uploads/2026/11/Darcy-Ribeiro-Semana-02-23-11-a-29-11-2.pdf"
     }
   ],
   "days": {
@@ -429,7 +429,7 @@
         },
         {
           "label": "Prato Principal Padrão",
-          "value": "Cubos de frango ao molho sugo"
+          "value": "Lagarto ao molho sugo"
         },
         {
           "label": "Prato Principal Ovolactovegetariano",
